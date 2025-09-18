@@ -302,7 +302,7 @@
        ------------------------- */
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-       const apiUrl = 'http://localhost:5000/api/contact';
+      const apiUrl = 'https://portfolio-website-pa8z.onrender.com/api/contact';
       contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = document.getElementById('name')?.value.trim();
