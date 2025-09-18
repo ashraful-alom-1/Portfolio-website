@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ashraful-alom-1.github.io/Portfolio-website/sitemap.xml
