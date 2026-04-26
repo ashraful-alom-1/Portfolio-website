@@ -45,6 +45,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
+  overflow-x: hidden;
 }
 
 body {
@@ -53,12 +54,22 @@ body {
   color: var(--text);
   line-height: 1.6;
   overflow-x: hidden;
+  width: 100%;
   -webkit-font-smoothing: antialiased;
 }
 
 a { text-decoration: none; color: inherit; }
 img { display: block; max-width: 100%; }
 ul { list-style: none; }
+
+p, h1, h2, h3, span, a, strong, input, textarea, button {
+  overflow-wrap: anywhere;
+}
+
+section, .container, .project-card, .skill-category, .edu-card,
+.cert-item, .misc-card, .contact-form, .contact-item {
+  min-width: 0;
+}
 
 .container {
   max-width: 1200px;
@@ -230,7 +241,7 @@ ul { list-style: none; }
 
 .hero-title {
   font-family: var(--f-head);
-  font-size: clamp(3.5rem, 8vw, 7.5rem);
+  font-size: clamp(2.75rem, 8vw, 7.5rem);
   font-weight: 800;
   line-height: 1.0;
   letter-spacing: -0.04em;
@@ -666,6 +677,7 @@ ul { list-style: none; }
 .project-links {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 /* === SKILLS === */
@@ -1175,14 +1187,158 @@ ul { list-style: none; }
 
   .toast { right: 16px; left: 16px; bottom: 16px; }
   .contact-form { padding: 28px 20px; }
+  .about-text,
+  .about-image {
+    transform: none;
+  }
 }
 
 @media (max-width: 480px) {
   .container { padding: 0 16px; }
+  html { scroll-padding-top: 68px; }
+  .navbar { padding: 14px 0; }
+  .section { padding: 64px 0; }
+  .section-label { font-size: 0.68rem; }
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 36px;
+    letter-spacing: 0;
+  }
+  .hero {
+    min-height: auto;
+    padding: 96px 0 64px;
+  }
+  .hero-content { padding-top: 0; }
+  .hero-badge {
+    max-width: 100%;
+    font-size: 0.75rem;
+    padding: 7px 12px;
+  }
+  .hero-title {
+    font-size: clamp(2.25rem, 13vw, 3.1rem);
+    letter-spacing: 0;
+  }
+  .hero-subtitle {
+    font-size: 1rem;
+    min-height: 3em;
+  }
+  .hero-description {
+    margin-bottom: 28px;
+  }
   .hero-buttons { flex-direction: column; }
-  .hero-buttons .btn { justify-content: center; }
-  .hero-stats { flex-wrap: wrap; gap: 16px; }
+  .hero-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .stat-item {
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    background: rgba(255,255,255,0.02);
+  }
   .stat-divider { display: none; }
+  .profile-frame {
+    width: min(100%, 260px);
+  }
+  .profile-image-container {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 7 / 8;
+    border-radius: var(--r-lg);
+  }
+  .profile-badge {
+    right: 12px;
+    bottom: 16px;
+  }
+  .about-details,
+  .contact-details {
+    gap: 12px;
+  }
+  .detail-item,
+  .contact-item {
+    align-items: flex-start;
+  }
+  .copy-email,
+  .contact-item a,
+  .contact-item span {
+    min-width: 0;
+    max-width: 100%;
+    word-break: break-word;
+  }
+  .project-info,
+  .skill-category,
+  .edu-card,
+  .cert-item,
+  .misc-card {
+    padding: 22px 18px;
+  }
+  .project-img-wrap {
+    height: auto;
+    aspect-ratio: 16 / 10;
+  }
+  .project-overlay {
+    flex-wrap: wrap;
+    padding: 16px;
+  }
+  .project-links,
+  .project-overlay {
+    flex-direction: column;
+  }
+  .project-links .btn,
+  .project-overlay-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .edu-card {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .edu-card:hover,
+  .edu-card.visible:hover {
+    transform: none;
+  }
+  .cert-item {
+    align-items: flex-start;
+  }
+  .strength-tag {
+    width: 100%;
+    text-align: center;
+  }
+  .misc-list li {
+    align-items: flex-start;
+    gap: 8px;
+    flex-direction: column;
+  }
+  .contact-form {
+    padding: 24px 16px;
+  }
+  .form-group input,
+  .form-group textarea {
+    padding: 13px 14px;
+  }
+  .footer-links {
+    justify-content: center;
+    gap: 14px 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .container { padding: 0 12px; }
+  .hero-title { font-size: 2.1rem; }
+  .btn { padding: 13px 18px; }
+  .nav-logo { font-size: 1.2rem; }
+  .project-info,
+  .skill-category,
+  .edu-card,
+  .cert-item,
+  .misc-card {
+    padding: 18px 14px;
+  }
 }
 
 /* === GSAP INITIAL STATES === */
