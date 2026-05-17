@@ -23,6 +23,13 @@
      ========================================= */
   const toastEl = document.getElementById('toast');
   const toastMessageEl = document.getElementById('toast-message');
+  function getApiBaseUrl() {
+    if (window.PORTFOLIO_API_BASE) return String(window.PORTFOLIO_API_BASE).replace(/\/$/, '');
+    const host = window.location.hostname;
+    const isLocal = window.location.protocol === 'file:' || host === 'localhost' || host === '127.0.0.1';
+    return isLocal ? 'http://localhost:5000/api' : 'https://portfolio-website-pa8z.onrender.com/api';
+  }
+
   function showToast(message = '', duration = 3000) {
     if (!toastEl || !toastMessageEl) return;
     toastMessageEl.textContent = message;
@@ -455,7 +462,7 @@
   function initContactForm() {
     const form = document.getElementById('contact-form');
     if (!form) return;
-    const apiUrl = 'https://portfolio-website-pa8z.onrender.com/api/contact';
+    const apiUrl = `${getApiBaseUrl()}/contact`;
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
@@ -510,6 +517,499 @@
       scale: 1.01,
       gyroscope: false
     });
+  }
+
+  /* =========================================
+     AI Portfolio Assistant
+     ========================================= */
+  function initAIAssistant() {
+    const assistant = document.getElementById('ai-assistant');
+    const toggle = document.getElementById('ai-chat-toggle');
+    const panel = document.getElementById('ai-chat-panel');
+    const closeBtn = document.getElementById('ai-close-chat');
+    const clearBtn = document.getElementById('ai-clear-chat');
+    const resumeBtn = document.getElementById('ai-resume-btn');
+    const form = document.getElementById('ai-input-form');
+    const input = document.getElementById('ai-input');
+    const sendBtn = document.getElementById('ai-send-btn');
+    const messagesEl = document.getElementById('ai-messages');
+    const suggestions = document.getElementById('ai-suggestions');
+    const statusText = document.getElementById('ai-status-text');
+    const leadForm = document.getElementById('ai-lead-form');
+    const cancelLeadBtn = document.getElementById('ai-cancel-lead');
+    const voiceBtn = document.getElementById('ai-voice-btn');
+
+    if (!assistant || !toggle || !panel || !form || !input || !messagesEl) return;
+
+    const assistantApiUrl = `${getApiBaseUrl()}/assistant`;
+    const contactApiUrl = `${getApiBaseUrl()}/contact`;
+    const storageKey = 'ashraful-ai-assistant-history-v2';
+    const greeting = "Hi, I am Ashraful Alom's AI portfolio assistant. Ask me about his skills, projects, resume, GitHub, or why he could be a good fit for your team.";
+    const localKnowledge = {
+      person:
+        'Ashraful Alom is a Full Stack Developer and B.Tech Computer Science & Engineering student from Palwal, Haryana, India. He builds responsive web applications and is focused on frontend quality, practical full-stack growth, clean UI, and continuous learning.',
+      education:
+        'Ashraful is pursuing B.Tech in Computer Science & Engineering at J.C. Bose University of Science and Technology, YMCA, Faridabad, expected 2026. He completed Higher Secondary Science in 2022 and HSLC in 2020.',
+      skills: {
+        frontend: ['HTML', 'CSS', 'JavaScript', 'React', 'Next.js', 'Tailwind CSS', 'Framer Motion'],
+        backend: ['Node.js', 'Express.js', 'REST API integration', 'Resend email service'],
+        tools: ['Git', 'GitHub', 'VS Code', 'Vercel', 'GitHub Pages', 'Render'],
+        programming: ['C', 'C++']
+      },
+      strengths: ['Quick learner', 'Problem solver', 'Good listener', 'Adaptable', 'Time management', 'Self motivated', 'Team collaboration'],
+      projects: [
+        {
+          name: 'Abhayapuri Care Hospital',
+          type: 'Full Stack / API Based / Production-ready candidate',
+          tech: 'Next.js, Tailwind CSS, Framer Motion',
+          summary: 'Healthcare management web app with appointment booking, departments, and a modern responsive UI.',
+          reason: 'It is the strongest full-stack portfolio project because it uses Next.js and is described as a healthcare management application rather than only a static page.'
+        },
+        {
+          name: 'Ecommerce Website',
+          type: 'Frontend Only',
+          tech: 'HTML, CSS, JavaScript',
+          summary: 'Responsive ecommerce frontend with product listings, cart UI, and DOM interactions.',
+          reason: 'It demonstrates frontend UI and JavaScript interaction without verified backend checkout or database logic.'
+        },
+        {
+          name: 'E-Learning Platform',
+          type: 'Frontend Only / UI focused',
+          tech: 'HTML, CSS, JavaScript',
+          summary: 'Responsive course and learning platform interface.'
+        },
+        {
+          name: 'Car Showroom Website',
+          type: 'Frontend Only / UI focused',
+          tech: 'HTML, CSS, JavaScript',
+          summary: 'Animated automotive-style responsive website.'
+        },
+        {
+          name: 'Justice Desk',
+          type: 'Frontend Only',
+          tech: 'HTML, CSS, JavaScript',
+          summary: 'Multi-page legal service website with professional responsive layouts.'
+        },
+        {
+          name: 'Travel Website',
+          type: 'Frontend Only',
+          tech: 'HTML, CSS, JavaScript',
+          summary: 'Travel website with destination sections and booking-style UI.'
+        },
+        {
+          name: 'Interactive Calculator',
+          type: 'Frontend Only / Utility',
+          tech: 'HTML, CSS, JavaScript',
+          summary: 'Calculator with keyboard support and real-time browser calculations.'
+        },
+        {
+          name: 'Basic Login Page',
+          type: 'Frontend Only / Authentication UI',
+          tech: 'HTML, CSS, JavaScript',
+          summary: 'Login interface with JavaScript form validation.'
+        },
+        {
+          name: 'C Language Programs',
+          type: 'Programming Practice',
+          tech: 'C Language',
+          summary: 'Collection of C programming problems for logic building.'
+        }
+      ],
+      links: {
+        github: 'https://github.com/ashraful-alom-1',
+        linkedin: 'https://www.linkedin.com/in/ashraful-alom-612a05268',
+        email: 'ashraful.abh@gmail.com'
+      }
+    };
+
+    let messages = loadMessages();
+    let isSending = false;
+    let typingEl = null;
+
+    function setStatus(text) {
+      if (statusText) statusText.textContent = text;
+    }
+
+    function escapeHtml(value = '') {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function inlineMarkdown(text) {
+      return escapeHtml(text)
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    }
+
+    function renderMarkdown(text = '') {
+      const lines = String(text).split(/\n+/);
+      let html = '';
+      let inList = false;
+
+      lines.forEach(rawLine => {
+        const line = rawLine.trim();
+        if (!line) return;
+        const bullet = line.match(/^[-*]\s+(.+)/);
+        const numbered = line.match(/^\d+\.\s+(.+)/);
+
+        if (bullet || numbered) {
+          if (!inList) {
+            html += '<ul>';
+            inList = true;
+          }
+          html += `<li>${inlineMarkdown((bullet || numbered)[1])}</li>`;
+          return;
+        }
+
+        if (inList) {
+          html += '</ul>';
+          inList = false;
+        }
+        html += `<p>${inlineMarkdown(line)}</p>`;
+      });
+
+      if (inList) html += '</ul>';
+      return html || '<p>I am ready to help.</p>';
+    }
+
+    function loadMessages() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        if (Array.isArray(saved) && saved.length) return saved.slice(-24);
+      } catch {
+        localStorage.removeItem(storageKey);
+      }
+      return [{ role: 'assistant', content: greeting, time: Date.now() }];
+    }
+
+    function saveMessages() {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(messages.slice(-24)));
+      } catch {
+        // Private browsing can block storage; the current chat still works.
+      }
+    }
+
+    function scrollToBottom() {
+      requestAnimationFrame(() => {
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      });
+    }
+
+    function appendMessage(message, shouldSave = true) {
+      const item = document.createElement('div');
+      item.className = `ai-message ai-message-${message.role}`;
+      item.innerHTML = renderMarkdown(message.content);
+      messagesEl.appendChild(item);
+      scrollToBottom();
+
+      if (shouldSave) {
+        messages.push({ role: message.role, content: message.content, time: Date.now() });
+        saveMessages();
+      }
+    }
+
+    function renderHistory() {
+      messagesEl.innerHTML = '';
+      messages.forEach(message => appendMessage(message, false));
+    }
+
+    function showTyping() {
+      removeTyping();
+      typingEl = document.createElement('div');
+      typingEl.className = 'ai-message ai-message-assistant';
+      typingEl.innerHTML = '<span class="ai-typing" aria-label="Assistant is typing"><span></span><span></span><span></span></span>';
+      messagesEl.appendChild(typingEl);
+      scrollToBottom();
+    }
+
+    function removeTyping() {
+      if (typingEl) typingEl.remove();
+      typingEl = null;
+    }
+
+    function setOpen(open) {
+      panel.classList.toggle('is-open', open);
+      toggle.classList.toggle('is-open', open);
+      panel.setAttribute('aria-hidden', String(!open));
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close AI portfolio assistant' : 'Open AI portfolio assistant');
+      if (open) setTimeout(() => input.focus(), 180);
+    }
+
+    function resizeInput() {
+      input.style.height = 'auto';
+      input.style.height = `${Math.min(input.scrollHeight, 112)}px`;
+    }
+
+    function detectsLeadIntent(text) {
+      return /\b(hire|hiring|internship|job|interview|freelance|collaborat|available|opportunity|schedule|contact|work with|recruiter|remote)\b/i.test(text);
+    }
+
+    function localAssistantReply(prompt) {
+      const text = String(prompt || '').toLowerCase();
+      const projectList = localKnowledge.projects
+        .map(project => `- **${project.name}** (${project.type}): ${project.summary} Tech: ${project.tech}.`)
+        .join('\n');
+      const fullStack = localKnowledge.projects
+        .filter(project => project.type.toLowerCase().includes('full stack'))
+        .map(project => `- **${project.name}**: ${project.reason}`)
+        .join('\n');
+      const frontend = localKnowledge.projects
+        .filter(project => project.type.toLowerCase().includes('frontend'))
+        .map(project => `- **${project.name}**: ${project.summary}`)
+        .join('\n');
+
+      if (/\b(hi|hello|hey)\b/.test(text) && text.length < 20) {
+        return 'Hi! I can help you explore Ashraful Alom\'s portfolio. You can ask about his skills, projects, full-stack work, resume, GitHub, education, or hiring fit.';
+      }
+
+      if (/who|about ashraful|tell me about ashraful|career|goal/.test(text)) {
+        return `${localKnowledge.person}\n\nCareer focus: Ashraful is interested in internship, fresher, freelance, and collaboration opportunities where he can contribute to frontend or full-stack web development while improving backend/API skills.`;
+      }
+
+      if (/skill|technology|tech stack|tools|frontend|backend|database|api/.test(text)) {
+        return `Ashraful's verified skills include:\n- **Frontend:** ${localKnowledge.skills.frontend.join(', ')}\n- **Backend/API:** ${localKnowledge.skills.backend.join(', ')}\n- **Tools:** ${localKnowledge.skills.tools.join(', ')}\n- **Programming:** ${localKnowledge.skills.programming.join(', ')}\n\nHis strongest visible area is responsive frontend development, with growing full-stack experience through Next.js and Express-based work.`;
+      }
+
+      if (/full stack|fullstack/.test(text)) {
+        return `Verified full-stack project:\n${fullStack}\n\nMost other listed projects are frontend-only because they are built with HTML, CSS, and JavaScript without verified backend/database behavior.`;
+      }
+
+      if (/frontend|front end|static/.test(text)) {
+        return `Frontend-focused projects:\n${frontend}`;
+      }
+
+      if (/project|work|best|advanced|portfolio/.test(text)) {
+        return `Here are Ashraful's portfolio projects:\n${projectList}\n\nFor recruiters, the best project to review first is **Abhayapuri Care Hospital** because it is the most advanced verified project and shows Next.js, Tailwind CSS, responsive UI, and full-stack direction.`;
+      }
+
+      if (/hire|why.*hire|job|internship|recruiter|value|different|team/.test(text)) {
+        return `Ashraful is a strong candidate for frontend or junior full-stack opportunities because:\n- He has built multiple responsive real-world website projects.\n- He shows practical JavaScript, React/Next.js, GitHub, deployment, and UI skills.\n- His hospital management project demonstrates growth beyond static pages.\n- He is a quick learner, problem solver, adaptable, and open to collaboration.\n\nHe would be especially suitable for roles where he can contribute to frontend implementation while continuing to grow in backend APIs, authentication, and database-backed apps.`;
+      }
+
+      if (/education|college|degree|semester|study/.test(text)) {
+        return localKnowledge.education;
+      }
+
+      if (/github|repo|source|code/.test(text)) {
+        return `Ashraful's GitHub profile is [github.com/ashraful-alom-1](${localKnowledge.links.github}). His important repositories include the hospital management project, ecommerce website, e-learning platform, car showroom website, Justice Desk, travel website, calculator, login page, and C language programs.`;
+      }
+
+      if (/contact|email|linkedin|message|connect/.test(text)) {
+        return `You can contact Ashraful directly through:\n- Email: [${localKnowledge.links.email}](mailto:${localKnowledge.links.email})\n- LinkedIn: [Ashraful Alom](${localKnowledge.links.linkedin})\n- GitHub: [ashraful-alom-1](${localKnowledge.links.github})\n\nYou can also use the contact form in this portfolio.`;
+      }
+
+      return `I can answer verified portfolio questions about Ashraful's skills, projects, education, GitHub, resume, and hiring fit. I am not fully confident about unrelated or unverified details, so for anything specific you can contact Ashraful directly at [${localKnowledge.links.email}](mailto:${localKnowledge.links.email}).`;
+    }
+
+    function openLeadForm(prefill = '') {
+      if (!leadForm) return;
+      leadForm.hidden = false;
+      const textarea = leadForm.querySelector('textarea[name="message"]');
+      if (textarea && prefill && !textarea.value.trim()) textarea.value = prefill;
+      setStatus('Contact capture is ready');
+      setTimeout(() => leadForm.querySelector('input[name="name"]')?.focus(), 80);
+    }
+
+    function closeLeadForm() {
+      if (!leadForm) return;
+      leadForm.hidden = true;
+      setStatus('Ready to answer portfolio questions');
+    }
+
+    async function sendMessage(text) {
+      const prompt = String(text || '').trim();
+      if (!prompt || isSending) return;
+
+      isSending = true;
+      sendBtn.disabled = true;
+      input.value = '';
+      resizeInput();
+      setStatus('Preparing portfolio answer...');
+      appendMessage({ role: 'user', content: prompt });
+      showTyping();
+
+      try {
+        const context = messages
+          .filter(item => item.role === 'user' || item.role === 'assistant')
+          .slice(-11, -1)
+          .map(item => ({ role: item.role, content: item.content }));
+
+        const response = await fetch(assistantApiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: prompt, messages: context })
+        });
+        const data = await response.json().catch(() => ({}));
+
+        removeTyping();
+
+        if (!response.ok || !data.success) {
+          appendMessage({
+            role: 'assistant',
+            content: localAssistantReply(prompt)
+          });
+          return;
+        }
+
+        appendMessage({ role: 'assistant', content: data.reply });
+
+        if (data.meta?.hiringIntent || data.meta?.contactIntent || detectsLeadIntent(prompt)) {
+          openLeadForm(prompt);
+          appendMessage({
+            role: 'system',
+            content: 'This looks like a high-intent inquiry. You can send your details here and Ashraful will receive them by email.'
+          });
+        }
+      } catch {
+        removeTyping();
+        appendMessage({
+          role: 'assistant',
+          content: localAssistantReply(prompt)
+        });
+      } finally {
+        isSending = false;
+        sendBtn.disabled = false;
+        setStatus('Ready to answer portfolio questions');
+      }
+    }
+
+    function initVoiceInput() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!voiceBtn || !SpeechRecognition) {
+        if (voiceBtn) voiceBtn.style.display = 'none';
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-IN';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.addEventListener('start', () => {
+        voiceBtn.classList.add('is-active');
+        setStatus('Listening...');
+      });
+      recognition.addEventListener('end', () => {
+        voiceBtn.classList.remove('is-active');
+        setStatus('Ready to answer portfolio questions');
+      });
+      recognition.addEventListener('result', event => {
+        const transcript = event.results?.[0]?.[0]?.transcript || '';
+        input.value = transcript;
+        resizeInput();
+        input.focus();
+      });
+      recognition.addEventListener('error', () => {
+        showToast('Voice input is not available right now.', 2200);
+      });
+
+      voiceBtn.addEventListener('click', () => recognition.start());
+    }
+
+    toggle.addEventListener('click', () => setOpen(!panel.classList.contains('is-open')));
+    closeBtn?.addEventListener('click', () => setOpen(false));
+    clearBtn?.addEventListener('click', () => {
+      messages = [{ role: 'assistant', content: greeting, time: Date.now() }];
+      saveMessages();
+      renderHistory();
+      closeLeadForm();
+      showToast('Chat history cleared.', 1800);
+    });
+    resumeBtn?.addEventListener('click', () => {
+      window.location.href = 'Ashraful Alom  Full Stack Developer Resume.pdf';
+    });
+
+    input.addEventListener('input', resizeInput);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      sendMessage(input.value);
+    });
+
+    suggestions?.addEventListener('click', e => {
+      const button = e.target.closest('button[data-question]');
+      if (!button) return;
+      setOpen(true);
+      sendMessage(button.dataset.question);
+    });
+
+    cancelLeadBtn?.addEventListener('click', closeLeadForm);
+    leadForm?.addEventListener('submit', async e => {
+      e.preventDefault();
+      const formData = new FormData(leadForm);
+      const payload = {
+        name: String(formData.get('name') || '').trim(),
+        email: String(formData.get('email') || '').trim(),
+        company: String(formData.get('company') || '').trim(),
+        message: String(formData.get('message') || '').trim(),
+        inquiryType: 'AI assistant lead',
+        source: 'AI portfolio assistant'
+      };
+
+      if (!payload.name || !payload.email || !payload.message) {
+        showToast('Please fill name, email, and message.', 2200);
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+        showToast('Enter a valid email address.', 2200);
+        return;
+      }
+
+      const submitBtn = leadForm.querySelector('button[type="submit"]');
+      const label = submitBtn?.querySelector('span');
+      const oldLabel = label?.textContent || 'Send Inquiry';
+
+      try {
+        if (submitBtn) submitBtn.disabled = true;
+        if (label) label.textContent = 'Sending...';
+
+        const response = await fetch(contactApiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.success) {
+          showToast(data.message || 'Could not send inquiry.', 2500);
+          return;
+        }
+
+        appendMessage({
+          role: 'system',
+          content: 'Your inquiry has been sent to Ashraful. He can reply directly to the email you provided.'
+        });
+        showToast('Inquiry sent successfully.', 2200);
+        leadForm.reset();
+        closeLeadForm();
+      } catch {
+        showToast('Server error. Please try again later.', 2500);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (label) label.textContent = oldLabel;
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && panel.classList.contains('is-open')) setOpen(false);
+    });
+
+    renderHistory();
+    resizeInput();
+    initVoiceInput();
   }
 
   /* =========================================
@@ -810,6 +1310,7 @@
     initEducationAnimation();
     initCopyEmail();
     initContactForm();
+    initAIAssistant();
 
     // VanillaTilt & GSAP after brief layout settle
     requestAnimationFrame(() => {

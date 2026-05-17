@@ -657,6 +657,92 @@
     </div>
   </footer>
 
+  <!-- AI Portfolio Assistant -->
+  <section class="ai-assistant" id="ai-assistant" aria-label="AI portfolio assistant">
+    <button class="ai-chat-toggle" id="ai-chat-toggle" type="button" aria-label="Open AI portfolio assistant" aria-controls="ai-chat-panel" aria-expanded="false">
+      <span class="ai-toggle-pulse" aria-hidden="true"></span>
+      <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
+    </button>
+
+    <div class="ai-chat-panel" id="ai-chat-panel" role="dialog" aria-modal="false" aria-labelledby="ai-chat-title" aria-hidden="true">
+      <div class="ai-chat-header">
+        <div class="ai-chat-identity">
+          <div class="ai-avatar" aria-hidden="true">
+            <span>AI</span>
+          </div>
+          <div>
+            <h2 id="ai-chat-title">Ashraful AI Assistant</h2>
+            <p>Recruiter guide for skills, projects, GitHub, and hiring</p>
+          </div>
+        </div>
+        <div class="ai-header-actions">
+          <button class="ai-icon-btn" id="ai-resume-btn" type="button" aria-label="Download resume">
+            <i class="fas fa-file-arrow-down" aria-hidden="true"></i>
+          </button>
+          <button class="ai-icon-btn" id="ai-clear-chat" type="button" aria-label="Clear chat history">
+            <i class="fas fa-rotate-right" aria-hidden="true"></i>
+          </button>
+          <button class="ai-icon-btn" id="ai-close-chat" type="button" aria-label="Close assistant">
+            <i class="fas fa-xmark" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="ai-status-row">
+        <span class="ai-status-dot" aria-hidden="true"></span>
+        <span id="ai-status-text">Ready to answer portfolio questions</span>
+      </div>
+
+      <div class="ai-suggestions" id="ai-suggestions" aria-label="Suggested questions">
+        <button type="button" data-question="Tell me about Ashraful's skills">Skills</button>
+        <button type="button" data-question="Which projects are full stack?">Full stack projects</button>
+        <button type="button" data-question="Why should we hire Ashraful?">Why hire me?</button>
+        <button type="button" data-question="Which technologies are used in this portfolio?">Tech used</button>
+        <button type="button" data-question="I want to discuss an internship or hiring opportunity">Contact</button>
+      </div>
+
+      <div class="ai-messages" id="ai-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+
+      <form class="ai-lead-form" id="ai-lead-form" hidden>
+        <div class="ai-lead-grid">
+          <label>
+            <span>Name</span>
+            <input type="text" name="name" autocomplete="name" required>
+          </label>
+          <label>
+            <span>Email</span>
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+        </div>
+        <label>
+          <span>Company <small>(optional)</small></span>
+          <input type="text" name="company" autocomplete="organization">
+        </label>
+        <label>
+          <span>Message</span>
+          <textarea name="message" rows="3" required placeholder="Tell Ashraful about the role, project, or collaboration..."></textarea>
+        </label>
+        <div class="ai-lead-actions">
+          <button class="btn btn-primary" type="submit"><span>Send Inquiry</span><i class="fas fa-paper-plane" aria-hidden="true"></i></button>
+          <button class="btn btn-outline" id="ai-cancel-lead" type="button">Cancel</button>
+        </div>
+      </form>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <label class="sr-only" for="ai-input">Ask about Ashraful's portfolio</label>
+        <textarea id="ai-input" rows="1" placeholder="Ask about projects, skills, resume, or hiring..." maxlength="1200"></textarea>
+        <div class="ai-input-actions">
+          <button class="ai-icon-btn" id="ai-voice-btn" type="button" aria-label="Start voice input">
+            <i class="fas fa-microphone" aria-hidden="true"></i>
+          </button>
+          <button class="ai-send-btn" id="ai-send-btn" type="submit" aria-label="Send message">
+            <i class="fas fa-arrow-up" aria-hidden="true"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
   <!-- Toast Notification -->
   <div class="toast" id="toast">
     <div class="toast-content">

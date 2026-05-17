@@ -5,10 +5,35 @@ const router = express.Router();
 // Initialize Resend with your API key
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+function escapeHtml(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function normalizeText(value = '', max = 3000) {
+  return String(value).trim().slice(0, max);
+}
+
 // Contact form endpoint
 router.post('/contact', async (req, res) => {
   try {
-    const { name, email, message } = req.body;
+    if (!process.env.RESEND_API_KEY) {
+      return res.status(500).json({
+        success: false,
+        message: 'Email service is not configured yet.'
+      });
+    }
+
+    const name = normalizeText(req.body.name, 120);
+    const email = normalizeText(req.body.email, 160).toLowerCase();
+    const message = normalizeText(req.body.message, 3000);
+    const company = normalizeText(req.body.company, 160);
+    const inquiryType = normalizeText(req.body.inquiryType || 'Portfolio contact', 80);
+    const source = normalizeText(req.body.source || 'Portfolio contact form', 80);
 
     // Validate input
     if (!name || !email || !message) {
@@ -31,13 +56,17 @@ router.post('/contact', async (req, res) => {
     const { data, error } = await resend.emails.send({
       from: 'Portfolio Contact <onboarding@resend.dev>',
       to: process.env.CONTACT_EMAIL || 'ashraful.abh@gmail.com',
-      subject: `New message from ${name} - Portfolio Contact`,
+      reply_to: email,
+      subject: `New ${inquiryType} from ${name} - Portfolio`,
       html: `
         <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        <p><strong>Company:</strong> ${escapeHtml(company || 'Not provided')}</p>
+        <p><strong>Inquiry Type:</strong> ${escapeHtml(inquiryType)}</p>
+        <p><strong>Source:</strong> ${escapeHtml(source)}</p>
         <p><strong>Message:</strong></p>
-        <p>${message}</p>
+        <p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>
         <hr>
         <p>Sent from your portfolio website</p>
       `,
@@ -57,10 +86,10 @@ router.post('/contact', async (req, res) => {
       to: email,
       subject: 'Thank you for contacting me!',
       html: `
-        <h2>Thank you for your message, ${name}!</h2>
+        <h2>Thank you for your message, ${escapeHtml(name)}!</h2>
         <p>I've received your message and will get back to you as soon as possible.</p>
         <p><strong>Your message:</strong></p>
-        <p>${message}</p>
+        <p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>
         <hr>
         <p>Best regards,</p>
         <p>Ashraful Alom</p>
