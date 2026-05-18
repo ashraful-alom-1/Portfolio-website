@@ -1261,18 +1261,40 @@ section, .container, .project-card, .skill-category, .edu-card,
   .nav-menu {
     position: fixed;
     inset: 0;
+    min-height: 100dvh;
+    padding: 96px 24px 40px;
     background: rgba(8,12,16,0.98);
     backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 28px;
+    overflow-y: auto;
     transform: translateX(100%);
     transition: transform 0.5s var(--ease);
     z-index: 999;
   }
   .nav-menu.active { transform: translateX(0); }
-  .nav-link { font-size: 1.6rem; font-weight: 700; }
+  .nav-menu li {
+    width: min(100%, 320px);
+    text-align: center;
+  }
+  .nav-link {
+    display: block;
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--r-sm);
+    background: rgba(255,255,255,0.035);
+    font-size: clamp(1.05rem, 6vw, 1.45rem);
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .nav-link::after,
+  .nav-link::before {
+    display: none;
+  }
   .nav-toggle { display: flex; }
 
   .hero-content { padding-top: 20px; }
@@ -1545,6 +1567,9 @@ section, .container, .project-card, .skill-category, .edu-card,
 }
 .navbar.nav-hidden {
   transform: translateY(-100%);
+}
+.navbar.menu-open {
+  transform: translateY(0);
 }
 .nav-logo,
 .footer-logo,

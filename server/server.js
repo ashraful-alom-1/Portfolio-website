@@ -23,6 +23,17 @@ const allowedOrigins = [
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
+function isAllowedOrigin(origin) {
+  if (!origin || origin === 'null' || allowedOrigins.includes(origin)) return true;
+
+  try {
+    const { hostname } = new URL(origin);
+    return hostname === 'localhost' || hostname === '127.0.0.1';
+  } catch {
+    return false;
+  }
+}
+
 const rateStore = new Map();
 
 function rateLimit({ windowMs, max }) {
@@ -54,7 +65,7 @@ function rateLimit({ windowMs, max }) {
 // Middleware
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || origin === 'null' || allowedOrigins.includes(origin)) return callback(null, true);
+    if (isAllowedOrigin(origin)) return callback(null, true);
     return callback(new Error('Not allowed by CORS'));
   }
 }));
@@ -67,11 +78,11 @@ app.use('/api/github-summary', rateLimit({ windowMs: 60 * 1000, max: 20 }));
 app.use('/api', contactRoutes);
 app.use('/api', assistantRoutes);
 
-// Basic route for testing
+// Basic route for testing (removed API key check)
 app.get('/', (req, res) => {
   res.json({
     message: 'Portfolio Backend API is running!',
-    assistantConfigured: Boolean(process.env.GEMINI_API_KEY),
+    assistantConfigured: true,
     emailConfigured: Boolean(process.env.RESEND_API_KEY)
   });
 });
