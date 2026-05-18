@@ -1050,6 +1050,11 @@ if (hasAnyQuery(Q, ['bye', 'byee', 'goodbye', 'see you', 'cya', 'see ya', 'tata'
     return `Mere hobbies hain: Photography, Travel, aur Football.`;
   }
 
+// ============ IDENTITY / NAME (flexible) ============
+if (hasAnyQuery(Q, ['who are you', 'tell me about yourself', 'introduce yourself', 'may i know you', 'may i know u', 'can you introduce yourself', 'your introduction', 'about you', 'know about you', 'tell me about u', 'who u r', 'u r who'])) {
+    return H ? `Main Ashraful Alom hoon, ek **Full Stack Developer | B.Tech CSE Student**. Main ${loc} se hoon.` : `I'm Ashraful Alom, a **Full Stack Developer | B.Tech CSE Student** from ${loc}.`;
+}
+   
 // ============ GOALS (flexible) ============
 if (hasAnyQuery(Q, ['goal', 'career goal', 'dream job', 'want to achieve', 'professional goal', 'aim', 'target', 'what is your goal', 'what are your goals'])) {
     return 'My goal is to become a skilled Full Stack Developer, contribute to impactful projects, and grow into a tech lead role.';
