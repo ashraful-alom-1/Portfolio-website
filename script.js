@@ -1049,7 +1049,10 @@ function localAssistantReply(prompt) {
     return `Mere hobbies hain: Photography, Travel, aur Football.`;
   }
 
-
+// ============ GOALS (flexible) ============
+if (hasAnyQuery(Q, ['goal', 'career goal', 'dream job', 'want to achieve', 'professional goal', 'aim', 'target', 'what is your goal', 'what are your goals'])) {
+    return 'My goal is to become a skilled Full Stack Developer, contribute to impactful projects, and grow into a tech lead role.';
+}
 
 
     // ============ EDUCATION (flexible) ============
