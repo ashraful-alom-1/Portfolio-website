@@ -845,9 +845,10 @@ function localAssistantReply(prompt) {
   if (Q === 'long time!' || Q === 'long time' || Q === 'missed you!' || Q === 'missed you' || Q === 'nice to meet you.' || Q === 'nice to meet you')
     return H ? 'Haan! Kya jaanna chahte ho mere baare mein?' : 'Nice to meet you too! What would you like to know about me?';
 
-  // ============ GOODBYE ============
-  if (Q === 'bye' || Q === 'byee' || Q === 'goodbye' || Q === 'see you' || Q === 'see you later.' || Q === 'see you later' || Q === 'cya' || Q === 'see ya' || Q === 'tata' || Q === 'take care' || Q === 'farewell' || Q === 'alvida' || Q === 'phir milenge')
+  // ============ GOODBYE (flexible) ============
+if (hasAnyQuery(Q, ['bye', 'byee', 'goodbye', 'see you', 'cya', 'see ya', 'tata', 'take care', 'farewell', 'alvida', 'phir milenge', 'ok bye', 'ok bye!', 'bye bye', 'byy', 'tata bye bye', 'okay bye', 'alright bye', 'bye for now', 'see you again', 'see you later', 'talk to you later', 'talk you later', 'catch you later', 'see you soon', 'talk soon'])) {
     return H ? 'Bye! Agar aur koi sawaal ho toh pooch lena. Contact: ashraful.abh@gmail.com' : 'Bye! Feel free to ask more questions anytime. Contact: ashraful.abh@gmail.com';
+}
 
   // ============ THANKS ============
   if (Q === 'thank you' || Q === 'thanks' || Q === 'thx' || Q === 'ty' || Q === 'thanks for your help.' || Q === 'thanks for your help' || Q === 'thankx' || Q === 'dhanyawad' || Q === 'shukriya' || Q === 'thank u')
