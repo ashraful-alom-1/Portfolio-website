@@ -877,9 +877,15 @@ if (
     ? 'Hi! Main Ashraful Alom hoon. Mere portfolio ke baare mein poocho — skills, projects, education, ya contact.'
     : "Hi! I'm Ashraful Alom. Ask me about my skills, projects, education, or why I'd be a great fit for your team.";
 }
-  if (Q === 'how are you?' || Q === 'how are you' || Q === 'how r u' || Q === 'how you doing' || Q === 'how\'s it going' || Q === 'how is your day going?' || Q === 'how is your day going' || Q === 'what\'s up?' || Q === 'whats up' || Q === 'what\'s new?' || Q === 'whats new' || Q === 'kaise ho?' || Q === 'kaise ho' || Q === 'kya haal hai' || Q === 'sab theek')
-    return H ? 'Main theek hoon! Aap batao — mere portfolio ke baare mein kya jaanna chahte ho?' : "I'm doing great! What would you like to know about my portfolio?";
 
+
+// ============ WHAT'S UP / HOW ARE YOU ============
+if (hasAnyQuery(Q, ['what\'s up', 'whats up', 'sup', 'wassup', 'how are you', 'how you doing', 'how r u', 'kaise ho'])) {
+  return H ? 'Main theek hoon! Aap batao — mere portfolio ke baare mein kya jaanna chahte ho?' : "I'm doing great! What would you like to know about my portfolio?";
+}
+
+
+ 
   if (Q === 'long time!' || Q === 'long time' || Q === 'missed you!' || Q === 'missed you' || Q === 'nice to meet you.' || Q === 'nice to meet you')
     return H ? 'Haan! Kya jaanna chahte ho mere baare mein?' : 'Nice to meet you too! What would you like to know about me?';
 
@@ -1501,6 +1507,19 @@ if (hasAnyQuery(Q, ['goal', 'career goal', 'dream job', 'want to achieve', 'prof
     return '**Abhayapuri Care Hospital** is a full-stack hospital management system built with **Next.js, Tailwind CSS, and Framer Motion**. It features a responsive UI and modern design.';
   }
 
+
+  // ============ FULL STACK PROJECT (all variations) - HIGH PRIORITY ============
+if (hasAnyQuery(Q, [
+  'full stack project', 'fullstack project', 'full-stack project',
+  'which is full stack', 'which is the full stack project',
+  'tell me about your full stack project', 'your full stack project',
+  'full stack projects', 'full stack wala project', 'full stack project kya hai',
+  'what is your full stack project', 'which project is full stack'
+])) {
+  return H
+    ? 'Mera **full-stack project** **Abhayapuri Care Hospital** hai — Next.js, Tailwind CSS, Framer Motion ke saath.'
+    : 'My **full-stack project** is **Abhayapuri Care Hospital** — built with Next.js, Tailwind CSS, and Framer Motion.';
+}
 
   // ============ ABHAYAPURI CARE HOSPITAL ============
   if (Q === 'tell me about the abhayapuri care hospital project.' || Q === 'tell me about the abhayapuri care hospital project' || Q === 'what is the hospital management project?' || Q === 'what is the hospital management project' || Q === 'what is your healthcare project about?' || Q === 'what is your healthcare project about' || Q === 'tell me about your full-stack project.' || Q === 'tell me about your full stack project' || Q === 'what is your healthcare management app?' || Q === 'what is your healthcare management app')
