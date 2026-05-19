@@ -1391,6 +1391,22 @@ if (hasAnyQuery(Q, ['goal', 'career goal', 'dream job', 'want to achieve', 'prof
   if (Q === 'what was your 10th percentage?' || Q === 'what was your 10th percentage' || Q === 'what was your 12th percentage?' || Q === 'what was your 12th percentage' || Q === 'what semester is going on?' || Q === 'what semester is going on' || Q === 'when is your final exam?' || Q === 'when is your final exam' || Q === 'do you have a backlog?' || Q === 'do you have a backlog' || Q === 'what subjects are you studying this sem?' || Q === 'what subjects are you studying this sem' || Q === 'what\'s your favorite subject in engineering?' || Q === 'whats your favorite subject in engineering' || Q === 'which subject do you hate the most?' || Q === 'which subject do you hate the most' || Q === 'what\'s the toughest subject for you?' || Q === 'whats the toughest subject for you' || Q === 'are you good at mathematics?' || Q === 'are you good at mathematics' || Q === 'how\'s your dsa?' || Q === 'hows your dsa' || Q === 'do you do competitive programming?' || Q === 'do you do competitive programming' || Q === 'leetcode or codechef?' || Q === 'leetcode or codechef' || Q === 'what\'s your coding profile?' || Q === 'whats your coding profile' || Q === 'have you done any internships during college?' || Q === 'have you done any internships during college' || Q === 'does your college provide placement?' || Q === 'does your college provide placement' || Q === 'are you preparing for campus placements?' || Q === 'are you preparing for campus placements' || Q === 'what companies visit your campus?' || Q === 'what companies visit your campus' || Q === 'what\'s the average package at your college?' || Q === 'whats the average package at your college' || Q === 'what\'s your dream company for placement?' || Q === 'whats your dream company for placement' || Q === 'are you eligible for placements?' || Q === 'are you eligible for placements' || Q === 'what\'s your attendance percentage?' || Q === 'whats your attendance percentage' || Q === 'do you attend classes regularly?' || Q === 'do you attend classes regularly' || Q === 'how is the faculty at your college?' || Q === 'how is the faculty at your college' || Q === 'do you like your college environment?' || Q === 'do you like your college environment' || Q === 'how\'s the infrastructure at ymca?' || Q === 'hows the infrastructure at ymca' || Q === 'is ymca a good university?' || Q === 'is ymca a good university' || Q === 'what\'s the ranking of your university?' || Q === 'whats the ranking of your university' || Q === 'is your college aicte approved?' || Q === 'is your college aicte approved' || Q === 'is ymca a government or private college?' || Q === 'is ymca a government or private college' || Q === 'what\'s the fee structure?' || Q === 'whats the fee structure' || Q === 'did you get admission through jee?' || Q === 'did you get admission through jee' || Q === 'what was your jee rank?' || Q === 'what was your jee rank' || Q === 'was it through state quota?' || Q === 'was it through state quota' || Q === 'how did you get into ymca?' || Q === 'how did you get into ymca' || Q === 'why did you choose ymca faridabad?' || Q === 'why did you choose ymca faridabad' || Q === 'was ymca your first choice?' || Q === 'was ymca your first choice' || Q === 'any regrets about your college choice?' || Q === 'any regrets about your college choice' || Q === 'which board were you in for 12th?' || Q === 'which board were you in for 12th' || Q === 'seba or cbse for hslc?' || Q === 'seba or cbse for hslc' || Q === 'was your schooling in assamese medium?' || Q === 'was your schooling in assamese medium' || Q === 'did you study in a government school?' || Q === 'did you study in a government school' || Q === 'how was your school life?' || Q === 'how was your school life' || Q === 'were you a topper in school?' || Q === 'were you a topper in school' || Q === 'did you take coaching for jee?' || Q === 'did you take coaching for jee' || Q === 'did you ever fail any subject?' || Q === 'did you ever fail any subject' || Q === 'what extracurricular activities did you do in school?' || Q === 'what extracurricular activities did you do in school' || Q === 'were you a sports person in school?' || Q === 'were you a sports person in school' || Q === 'any school achievements?' || Q === 'any school achievements' || Q === 'did you get any scholarship?' || Q === 'did you get any scholarship' || Q === 'were you a prefect or monitor?' || Q === 'were you a prefect or monitor' || Q === 'what was your favorite teacher\'s name?' || Q === 'what was your favorite teachers name' || Q === 'any subject you were particularly good at?' || Q === 'any subject you were particularly good at' || Q === 'did you have computer science in 12th?' || Q === 'did you have computer science in 12th' || Q === 'when did you first touch a computer?' || Q === 'when did you first touch a computer' || Q === 'did you have internet at home during school?' || Q === 'did you have internet at home during school' || Q === 'how did you manage studies in a small town?' || Q === 'how did you manage studies in a small town' || Q === 'what are the education facilities like in your hometown?' || Q === 'what are the education facilities like in your hometown' || Q === 'do you plan to do a master\'s degree?' || Q === 'do you plan to do a masters degree' || Q === 'mtech or mba?' || Q === 'mtech or mba' || Q === 'do you want to study abroad?' || Q === 'do you want to study abroad' || Q === 'plans for higher education?' || Q === 'plans for higher education' || Q === 'will you go for gate?' || Q === 'will you go for gate' || Q === 'are you interested in research?' || Q === 'are you interested in research' || Q === 'any plans for phd?' || Q === 'any plans for phd' || Q === 'do you want to be a professor someday?' || Q === 'do you want to be a professor someday' || Q === 'what\'s your ultimate academic goal?' || Q === 'whats your ultimate academic goal')
     return FB;
 
+
+
+  // ============ FULL STACK PROJECT (all variations) - HIGH PRIORITY ============
+if (hasAnyQuery(Q, [
+  'full stack project', 'fullstack project', 'full-stack project',
+  'which is full stack', 'which is the full stack project',
+  'tell me about your full stack project', 'your full stack project',
+  'full stack projects', 'full stack wala project', 'full stack project kya hai',
+  'what is your full stack project', 'which project is full stack'
+])) {
+  return H
+    ? 'Mera **full-stack project** **Abhayapuri Care Hospital** hai — Next.js, Tailwind CSS, Framer Motion ke saath.'
+    : 'My **full-stack project** is **Abhayapuri Care Hospital** — built with Next.js, Tailwind CSS, and Framer Motion.';
+}
+
+
   // ============ SKILLS (EXACT MATCHES) ============
   if (normalizedQ.includes('skill') || normalizedQ.includes('tech') || normalizedQ.includes('stack') || normalizedQ.includes('know') || normalizedQ.includes('expertise') || normalizedQ.includes('arsenal'))
     return `My technical skills are: **${techList}**.`;
@@ -1508,19 +1524,7 @@ if (hasAnyQuery(Q, ['goal', 'career goal', 'dream job', 'want to achieve', 'prof
   }
 
 
-  // ============ FULL STACK PROJECT (all variations) - HIGH PRIORITY ============
-if (hasAnyQuery(Q, [
-  'full stack project', 'fullstack project', 'full-stack project',
-  'which is full stack', 'which is the full stack project',
-  'tell me about your full stack project', 'your full stack project',
-  'full stack projects', 'full stack wala project', 'full stack project kya hai',
-  'what is your full stack project', 'which project is full stack'
-])) {
-  return H
-    ? 'Mera **full-stack project** **Abhayapuri Care Hospital** hai — Next.js, Tailwind CSS, Framer Motion ke saath.'
-    : 'My **full-stack project** is **Abhayapuri Care Hospital** — built with Next.js, Tailwind CSS, and Framer Motion.';
-}
-
+  
   // ============ ABHAYAPURI CARE HOSPITAL ============
   if (Q === 'tell me about the abhayapuri care hospital project.' || Q === 'tell me about the abhayapuri care hospital project' || Q === 'what is the hospital management project?' || Q === 'what is the hospital management project' || Q === 'what is your healthcare project about?' || Q === 'what is your healthcare project about' || Q === 'tell me about your full-stack project.' || Q === 'tell me about your full stack project' || Q === 'what is your healthcare management app?' || Q === 'what is your healthcare management app')
     return '**Abhayapuri Care Hospital** is a full-stack hospital management system built with **Next.js, Tailwind CSS, and Framer Motion**. It features a responsive UI and modern design.';
