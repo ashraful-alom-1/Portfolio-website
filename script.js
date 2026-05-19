@@ -835,10 +835,48 @@ function localAssistantReply(prompt) {
   const linkedin = localKnowledge.links.linkedin;
   const github = localKnowledge.links.github;
 
-  // ============ GREETINGS (EXACT & VARIATIONS) ============
-  if (Q === 'hi' || Q === 'hello' || Q === 'hey' || Q === 'hii' || Q === 'heyy' || Q === 'hiii' || Q === 'heya' || Q === 'howdy' || Q === 'yo' || Q === 'wassup' || Q === 'sup' || Q === 'wassup dude?' || Q === 'wassup dude' || Q === 'what\'s good' || Q === 'whats good' || Q === 'good morning' || Q === 'good evening' || Q === 'good afternoon' || Q === 'namaste' || Q === 'namaskar' || /^(hi|hello|hey|hii|heyy|hiii|heya|howdy|yo|sup|wassup)\b/i.test(Q))
-    return H ? 'Hi! Main Ashraful Alom hoon. Mere portfolio ke baare mein poocho — skills, projects, education, ya contact.' : "Hi! I'm Ashraful Alom. Ask me about my skills, projects, education, or why I'd be a great fit for your team.";
+  // ============ ISLAMIC GREETINGS (FIRST PRIORITY) ============
+if (
+  Q === 'assalamu alaikum' ||
+  Q === 'assalamualaikum' ||
+  Q === 'as salamu alaikum' ||
+  Q === 'assalamu alaikum wa rahmatullah' ||
+  Q === 'salam' ||
+  /^(assalamu alaikum|assalamualaikum|salam|assalamu alaikum wa rahmatullah)\b/i.test(Q)
+) {
+  return H
+    ? 'Wa alaikum assalam  😊 Main Ashraful Alom hoon. Mere portfolio ke baare mein poocho — skills, projects, education, ya contact.'
+    : "Wa alaikum assalam  😊 I'm Ashraful Alom. Ask me about my skills, projects, education, or why I'd be a great fit for your team.";
+}
 
+// ============ OTHER GREETINGS ============
+if (
+  Q === 'hi' ||
+  Q === 'hello' ||
+  Q === 'hey' ||
+  Q === 'hii' ||
+  Q === 'heyy' ||
+  Q === 'hiii' ||
+  Q === 'heya' ||
+  Q === 'howdy' ||
+  Q === 'yo' ||
+  Q === 'wassup' ||
+  Q === 'sup' ||
+  Q === 'wassup dude?' ||
+  Q === 'wassup dude' ||
+  Q === "what's good" ||
+  Q === 'whats good' ||
+  Q === 'good morning' ||
+  Q === 'good evening' ||
+  Q === 'good afternoon' ||
+  Q === 'namaste' ||
+  Q === 'namaskar' ||
+  /^(hi|hello|hey|hii|heyy|hiii|heya|howdy|yo|sup|wassup)\b/i.test(Q)
+) {
+  return H
+    ? 'Hi! Main Ashraful Alom hoon. Mere portfolio ke baare mein poocho — skills, projects, education, ya contact.'
+    : "Hi! I'm Ashraful Alom. Ask me about my skills, projects, education, or why I'd be a great fit for your team.";
+}
   if (Q === 'how are you?' || Q === 'how are you' || Q === 'how r u' || Q === 'how you doing' || Q === 'how\'s it going' || Q === 'how is your day going?' || Q === 'how is your day going' || Q === 'what\'s up?' || Q === 'whats up' || Q === 'what\'s new?' || Q === 'whats new' || Q === 'kaise ho?' || Q === 'kaise ho' || Q === 'kya haal hai' || Q === 'sab theek')
     return H ? 'Main theek hoon! Aap batao — mere portfolio ke baare mein kya jaanna chahte ho?' : "I'm doing great! What would you like to know about my portfolio?";
 
@@ -846,7 +884,7 @@ function localAssistantReply(prompt) {
     return H ? 'Haan! Kya jaanna chahte ho mere baare mein?' : 'Nice to meet you too! What would you like to know about me?';
 
   // ============ GOODBYE (flexible) ============
-if (hasAnyQuery(Q, ['bye', 'byee', 'goodbye', 'see you', 'cya', 'see ya', 'tata', 'take care', 'farewell', 'alvida', 'phir milenge', 'ok bye', 'ok bye!', 'bye bye', 'byy', 'tata bye bye', 'okay bye', 'alright bye', 'bye for now', 'see you again', 'see you later','have a nice day','good night', 'talk to you later', 'talk you later', 'catch you later', 'see you soon', 'talk soon'])) {
+if (hasAnyQuery(Q, ['bye', 'byee', 'goodbye', 'see you', 'cya', 'see ya', 'tata', 'take care', 'farewell', 'alvida', 'phir milenge', 'ok bye', 'ok bye!', 'bye bye', 'byy', 'tata bye bye', 'okay bye', 'alright bye', 'bye for now', 'see you again', 'see you later','have a nice day','good night','have a good day','have a great day', 'talk to you later', 'talk you later', 'catch you later', 'see you soon', 'talk soon'])) {
     return H ? 'Bye! Agar aur koi sawaal ho toh pooch lena. Contact: ashraful.abh@gmail.com' : 'Bye! Feel free to ask more questions anytime. Contact: ashraful.abh@gmail.com';
 }
 
@@ -1050,6 +1088,11 @@ if (hasAnyQuery(Q, ['bye', 'byee', 'goodbye', 'see you', 'cya', 'see ya', 'tata'
     return `Mere hobbies hain: Photography, Travel, aur Football.`;
   }
 
+// ============ IDENTITY / NAME (flexible) ============
+if (hasAnyQuery(Q, ['who are you', 'tell me about yourself', 'introduce yourself', 'may i know you', 'may i know u', 'can you introduce yourself', 'your introduction', 'about you', 'know about you', 'tell me about u', 'who u r', 'u r who'])) {
+    return H ? `Main Ashraful Alom hoon, ek **Full Stack Developer | B.Tech CSE Student**. Main ${loc} se hoon.` : `I'm Ashraful Alom, a **Full Stack Developer | B.Tech CSE Student** from ${loc}.`;
+}
+   
 // ============ GOALS (flexible) ============
 if (hasAnyQuery(Q, ['goal', 'career goal', 'dream job', 'want to achieve', 'professional goal', 'aim', 'target', 'what is your goal', 'what are your goals'])) {
     return 'My goal is to become a skilled Full Stack Developer, contribute to impactful projects, and grow into a tech lead role.';
