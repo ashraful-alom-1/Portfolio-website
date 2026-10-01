@@ -1,24 +1,29 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Portfolio of Ashraful Alom — Full Stack Developer from Palwal, Haryana, India. Explore projects in HTML, CSS, JavaScript, React, and more.">
-  <meta name="keywords" content="Ashraful Alom, web developer portfolio, full stack developer India, B.Tech CSE student, React developer Haryana, developer Palwal">
+  <meta name="description"
+    content="Portfolio of Ashraful Alom — Full Stack Developer from Palwal, Haryana, India. Explore projects in HTML, CSS, JavaScript, React, and more.">
+  <meta name="keywords"
+    content="Ashraful Alom, web developer portfolio, full stack developer India, B.Tech CSE student, React developer Haryana, developer Palwal">
   <meta name="author" content="Ashraful Alom">
   <meta name="google-site-verification" content="5nt-ws3SSId27Ro23E7eVwN07Jf8FhbdLdYSYfqWj_M" />
   <title>Ashraful Alom | Full Stack Developer Portfolio</title>
   <meta property="og:title" content="Ashraful Alom | Full Stack Developer Portfolio" />
-  <meta property="og:description" content="Explore projects, resume, and contact Ashraful Alom — Full Stack Developer and B.Tech CSE student." />
+  <meta property="og:description"
+    content="Explore projects, resume, and contact Ashraful Alom — Full Stack Developer and B.Tech CSE student." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://ashraful-alom-1.github.io/Portfolio-website/" />
   <meta property="og:image" content="https://ashraful-alom-1.github.io/Portfolio-website/image.png" />
   <meta property="og:site_name" content="Ashraful Alom Portfolio" />
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <meta name="theme-color" content="#080c10">
+  <meta name="theme-color" content="#04070a">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Ashraful Alom | Full Stack Developer Portfolio">
-  <meta name="twitter:description" content="Official portfolio of Ashraful Alom, Full Stack Developer and B.Tech CSE student.">
+  <meta name="twitter:description"
+    content="Official portfolio of Ashraful Alom, Full Stack Developer and B.Tech CSE student.">
   <meta name="twitter:image" content="https://ashraful-alom-1.github.io/Portfolio-website/image.png">
   <link rel="canonical" href="https://ashraful-alom-1.github.io/Portfolio-website/">
   <link rel="icon" type="image/png" href="image.png">
@@ -26,7 +31,9 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+    rel="stylesheet">
 
   <!-- Icons & Libs -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -76,6 +83,31 @@
 </head>
 
 <body>
+  <!-- SVG defs: caustic turbulence + glass displacement (invisible, referenced via CSS) -->
+  <svg class="sr-only" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="causticTurbulence" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.010 0.018" numOctaves="2" seed="7" result="noise">
+          <animate attributeName="baseFrequency" dur="38s" values="0.010 0.018;0.014 0.012;0.010 0.018"
+            repeatCount="indefinite" />
+        </feTurbulence>
+        <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0.66
+                  0 0 0 0 0.80
+                  0 0 0 0 1
+                  0 0 0 0.5 0" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Liquid Background -->
+  <div class="liquid-bg" aria-hidden="true">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+    <div class="liquid-caustic"></div>
+    <div class="liquid-sheen"></div>
+  </div>
+
   <!-- Scroll Progress -->
   <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
@@ -83,7 +115,9 @@
   <div class="preloader" id="preloader" aria-hidden="true">
     <div class="preloader-inner">
       <div class="preloader-logo"><span class="logo-bracket">[</span>AA<span class="logo-bracket">]</span></div>
-      <div class="preloader-bar"><div class="preloader-fill" id="preloader-fill"></div></div>
+      <div class="preloader-bar">
+        <div class="preloader-fill" id="preloader-fill"></div>
+      </div>
       <div class="preloader-text" id="preloader-text">Initializing portfolio...</div>
     </div>
   </div>
@@ -93,7 +127,7 @@
 
   <!-- Navigation -->
   <nav class="navbar" id="navbar" aria-label="Primary navigation">
-    <div class="nav-container container">
+    <div class="nav-container">
       <a href="#home" class="nav-logo" aria-label="Ashraful Alom Portfolio Home">
         <span class="logo-bracket">[</span>AA<span class="logo-bracket">]</span>
       </a>
@@ -108,7 +142,8 @@
       <div class="nav-cta">
         <a href="#contact" class="btn-nav">Hire Me</a>
       </div>
-      <div class="nav-toggle" id="nav-toggle" role="button" tabindex="0" aria-label="Open navigation menu" aria-controls="nav-menu" aria-expanded="false">
+      <div class="nav-toggle" id="nav-toggle" role="button" tabindex="0" aria-label="Open navigation menu"
+        aria-controls="nav-menu" aria-expanded="false">
         <span class="bar"></span>
         <span class="bar"></span>
         <span class="bar"></span>
@@ -121,7 +156,7 @@
     <canvas id="hero-canvas"></canvas>
     <div class="hero-grid-overlay"></div>
     <div class="container hero-content">
-      <div class="hero-badge" data-aos="fade-down" data-aos-duration="700">
+      <div class="hero-badge">
         <span class="badge-dot"></span>
         <span>Available for opportunities</span>
       </div>
@@ -133,7 +168,8 @@
       <div class="hero-subtitle">
         <span class="hero-subtitle-prefix">I'm a </span><span id="typed-text"></span><span class="typed-cursor">|</span>
       </div>
-      <p class="hero-description">Crafting pixel-perfect, high-performance web experiences from Palwal, Haryana, India.</p>
+      <p class="hero-description">Crafting pixel-perfect, high-performance web experiences from Palwal, Haryana, India.
+      </p>
       <div class="hero-buttons">
         <a href="#projects" class="btn btn-primary">
           <span>View Projects</span>
@@ -161,8 +197,10 @@
       </div>
     </div>
     <div class="social-sidebar">
-      <a href="https://github.com/ashraful-alom-1" aria-label="GitHub" class="social-link" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
-      <a href="https://www.linkedin.com/in/ashraful-alom-612a05268" aria-label="LinkedIn" class="social-link" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+      <a href="https://github.com/ashraful-alom-1" aria-label="GitHub" class="social-link" target="_blank"
+        rel="noopener"><i class="fab fa-github"></i></a>
+      <a href="https://www.linkedin.com/in/ashraful-alom-612a05268" aria-label="LinkedIn" class="social-link"
+        target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
       <div class="social-line"></div>
     </div>
     <a href="#about" class="scroll-indicator" aria-label="Scroll down">
@@ -176,10 +214,11 @@
   <!-- About Section -->
   <section id="about" class="section about">
     <div class="container">
-      <div class="section-label" data-aos="fade-right" data-aos-duration="700">01 — About</div>
-      <h2 class="section-title" id="about-heading" data-aos="fade-up" data-aos-delay="80" data-aos-duration="750">The person<br><em>behind the code</em></h2>
+      <div class="section-label">01 — About</div>
+      <h2 class="section-title" id="about-heading">The
+        person<br><em>behind the code</em></h2>
       <div class="about-content">
-        <div class="about-image" data-aos="fade-right" data-aos-delay="120" data-aos-duration="850">
+        <div class="about-image">
           <div class="profile-frame">
             <div class="profile-image-container"></div>
             <div class="profile-frame-border"></div>
@@ -196,10 +235,11 @@
             <span>B.Tech CSE </span>
           </div>
         </div>
-        <div class="about-text" data-aos="fade-left" data-aos-delay="160" data-aos-duration="850">
+        <div class="about-text">
           <p id="about-text-content" style="opacity: 0; height: 0; overflow: hidden;">
             Hi, I'm Ashraful Alom — a Full Stack Developer and this is my official portfolio.
-            I'm currently pursuing B.Tech in Computer Science & Engineering and love building responsive web applications
+            I'm currently pursuing B.Tech in Computer Science & Engineering and love building responsive web
+            applications
             using HTML, CSS, JavaScript, and React. Welcome to my portfolio website, where you can explore
             my projects, skills, and resume. Based in Palwal, Haryana, India, I'm eager to collaborate and grow.
           </p>
@@ -223,7 +263,7 @@
               </div>
             </div>
           </div>
-          <a href="Ashraful Alom  Full Stack Developer Resume.pdf" class="btn btn-primary" download>
+          <a href="ashraful-alom-resume.pdf" class="btn btn-primary" download>
             <i class="fas fa-download"></i>
             <span>Download CV</span>
           </a>
@@ -232,220 +272,266 @@
     </div>
   </section>
 
- <!-- Projects Section -->
-<section id="projects" class="section projects">
-  <div class="container">
-    <div class="section-label" data-aos="fade-right" data-aos-duration="700">02 — Work</div>
-    <h2 class="section-title" id="projects-heading" data-aos="fade-up" data-aos-delay="80" data-aos-duration="750">Selected<br><em>projects</em></h2>
-    <div class="projects-grid">
+  <!-- Projects Section -->
+  <section id="projects" class="section projects">
+    <div class="container">
+      <div class="section-label">02 — Work</div>
+      <h2 class="section-title" id="projects-heading">
+        Selected<br><em>projects</em></h2>
+      <div class="projects-grid">
 
-      <!-- Project 1 -->
-      <div class="project-card project-card-featured" data-tilt data-aos="fade-up" data-aos-delay="0" data-aos-duration="760">
-        <div class="project-card-inner">
-          <div class="project-img-wrap">
-            <img src="Screenshot 2026-04-18 133757.png" alt="Abhayapuri Care Hospital Website" loading="lazy">
-            <div class="featured-ribbon"><i class="fas fa-star"></i> Featured</div>
-            <div class="project-overlay">
-              <a href="https://hospital-management-mu-seven.vercel.app/" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
-              <a href="https://github.com/ashraful-alom-1/Hospital-management" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+        <!-- Project 1 -->
+        <div class="project-card project-card-featured" data-tilt
+>
+          <div class="project-card-inner">
+            <div class="project-img-wrap">
+              <img src="project-hospital.png" alt="Abhayapuri Care Hospital Website" loading="lazy">
+              <div class="featured-ribbon"><i class="fas fa-star"></i> Featured</div>
+              <div class="project-overlay">
+                <a href="https://hospital-management-mu-seven.vercel.app/" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
+                <a href="https://github.com/ashraful-alom-1/Hospital-management" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+              </div>
             </div>
-          </div>
-          <div class="project-info">
-            <div class="project-tags"><span>Next.js</span><span>Tailwind</span><span>Framer</span></div>
-            <h3>Abhayapuri Care Hospital</h3>
-            <p>Full-stack healthcare management web application built with Next.js, Tailwind CSS, and Framer Motion featuring appointment booking, departments, and modern responsive UI.</p>
-            <div class="project-links">
-              <a href="https://hospital-management-mu-seven.vercel.app/" target="_blank" rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
-              <a href="https://github.com/ashraful-alom-1/Hospital-management" target="_blank" rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+            <div class="project-info">
+              <div class="project-tags"><span>Next.js</span><span>Tailwind</span><span>Framer</span></div>
+              <h3>Abhayapuri Care Hospital</h3>
+              <p>Full-stack healthcare management web application built with Next.js, Tailwind CSS, and Framer Motion
+                featuring appointment booking, departments, and modern responsive UI.</p>
+              <div class="project-links">
+                <a href="https://hospital-management-mu-seven.vercel.app/" target="_blank" rel="noopener"
+                  class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
+                <a href="https://github.com/ashraful-alom-1/Hospital-management" target="_blank" rel="noopener"
+                  class="btn btn-sm btn-outline">Source Code</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Project 2 -->
-      <div class="project-card" data-tilt data-aos="fade-up" data-aos-delay="0" data-aos-duration="760">
-        <div class="project-card-inner">
-          <div class="project-img-wrap">
-            <img src="Screenshot 2025-09-09 234712.png" alt="Ecommerce Website" loading="lazy">
-            <div class="project-overlay">
-              <a href="https://ashraful-alom-1.github.io/ecommerce-website-by-html-css-and-js/" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
-              <a href="https://github.com/ashraful-alom-1/ecommerce-website-by-html-css-and-js" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+        <!-- Project 2 -->
+        <div class="project-card" data-tilt>
+          <div class="project-card-inner">
+            <div class="project-img-wrap">
+              <img src="project-ecommerce.png" alt="Ecommerce Website" loading="lazy">
+              <div class="project-overlay">
+                <a href="https://ashraful-alom-1.github.io/ecommerce-website-by-html-css-and-js/" target="_blank"
+                  rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
+                <a href="https://github.com/ashraful-alom-1/ecommerce-website-by-html-css-and-js" target="_blank"
+                  rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+              </div>
             </div>
-          </div>
-          <div class="project-info">
-            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
-            <h3>Ecommerce Website</h3>
-            <p>Responsive e-commerce frontend with product listings, shopping cart UI, and dynamic DOM interactions using Vanilla JavaScript.</p>
-            <div class="project-links">
-              <a href="https://ashraful-alom-1.github.io/ecommerce-website-by-html-css-and-js/" target="_blank" rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
-              <a href="https://github.com/ashraful-alom-1/ecommerce-website-by-html-css-and-js" target="_blank" rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+            <div class="project-info">
+              <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+              <h3>Ecommerce Website</h3>
+              <p>Responsive e-commerce frontend with product listings, shopping cart UI, and dynamic DOM interactions
+                using Vanilla JavaScript.</p>
+              <div class="project-links">
+                <a href="https://ashraful-alom-1.github.io/ecommerce-website-by-html-css-and-js/" target="_blank"
+                  rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
+                <a href="https://github.com/ashraful-alom-1/ecommerce-website-by-html-css-and-js" target="_blank"
+                  rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Project 3 -->
-      <div class="project-card" data-tilt data-aos="fade-up" data-aos-delay="70" data-aos-duration="760">
-        <div class="project-card-inner">
-          <div class="project-img-wrap">
-            <img src="Screenshot 2025-09-07 154242.png" alt="E-Learning Platform" loading="lazy">
-            <div class="project-overlay">
-              <a href="https://ashraful-alom-1.github.io/E-Learning-Website/" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
-              <a href="https://github.com/ashraful-alom-1/E-Learning-Website" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+        <!-- Project 3 -->
+        <div class="project-card" data-tilt>
+          <div class="project-card-inner">
+            <div class="project-img-wrap">
+              <img src="project-elearning.png" alt="E-Learning Platform" loading="lazy">
+              <div class="project-overlay">
+                <a href="https://ashraful-alom-1.github.io/E-Learning-Website/" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
+                <a href="https://github.com/ashraful-alom-1/E-Learning-Website" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+              </div>
             </div>
-          </div>
-          <div class="project-info">
-            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
-            <h3>E-Learning Platform</h3>
-            <p>Modern e-learning platform featuring responsive course layouts, interactive lessons, and clean user-focused UI design.</p>
-            <div class="project-links">
-              <a href="https://ashraful-alom-1.github.io/E-Learning-Website/" target="_blank" rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
-              <a href="https://github.com/ashraful-alom-1/E-Learning-Website" target="_blank" rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+            <div class="project-info">
+              <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+              <h3>E-Learning Platform</h3>
+              <p>Modern e-learning platform featuring responsive course layouts, interactive lessons, and clean
+                user-focused UI design.</p>
+              <div class="project-links">
+                <a href="https://ashraful-alom-1.github.io/E-Learning-Website/" target="_blank" rel="noopener"
+                  class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
+                <a href="https://github.com/ashraful-alom-1/E-Learning-Website" target="_blank" rel="noopener"
+                  class="btn btn-sm btn-outline">Source Code</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Project 4 -->
-      <div class="project-card" data-tilt data-aos="fade-up" data-aos-delay="140" data-aos-duration="760">
-        <div class="project-card-inner">
-          <div class="project-img-wrap">
-            <img src="Screenshot 2025-09-04 225611.png" alt="Car Showroom Website" loading="lazy">
-            <div class="project-overlay">
-              <a href="https://ashraful-alom-1.github.io/Car-showroom-website/" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
-              <a href="https://github.com/ashraful-alom-1/Car-showroom-website" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+        <!-- Project 4 -->
+        <div class="project-card" data-tilt>
+          <div class="project-card-inner">
+            <div class="project-img-wrap">
+              <img src="project-car-showroom.png" alt="Car Showroom Website" loading="lazy">
+              <div class="project-overlay">
+                <a href="https://ashraful-alom-1.github.io/Car-showroom-website/" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
+                <a href="https://github.com/ashraful-alom-1/Car-showroom-website" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+              </div>
             </div>
-          </div>
-          <div class="project-info">
-            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
-            <h3>Car Showroom Website</h3>
-            <p>Immersive car showroom website with smooth animations, responsive layouts, and modern automotive-inspired design.</p>
-            <div class="project-links">
-              <a href="https://ashraful-alom-1.github.io/Car-showroom-website/" target="_blank" rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
-              <a href="https://github.com/ashraful-alom-1/Car-showroom-website" target="_blank" rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+            <div class="project-info">
+              <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+              <h3>Car Showroom Website</h3>
+              <p>Immersive car showroom website with smooth animations, responsive layouts, and modern
+                automotive-inspired design.</p>
+              <div class="project-links">
+                <a href="https://ashraful-alom-1.github.io/Car-showroom-website/" target="_blank" rel="noopener"
+                  class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
+                <a href="https://github.com/ashraful-alom-1/Car-showroom-website" target="_blank" rel="noopener"
+                  class="btn btn-sm btn-outline">Source Code</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Project 5 -->
-      <div class="project-card" data-tilt data-aos="fade-up" data-aos-delay="0" data-aos-duration="760">
-        <div class="project-card-inner">
-          <div class="project-img-wrap">
-            <img src="Screenshot 2025-09-10 091728.png" alt="Justice Desk" loading="lazy">
-            <div class="project-overlay">
-              <a href="https://ashraful-alom-1.github.io/Justice-Desk-website/" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
-              <a href="https://github.com/ashraful-alom-1/Justice-Desk-website" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+        <!-- Project 5 -->
+        <div class="project-card" data-tilt>
+          <div class="project-card-inner">
+            <div class="project-img-wrap">
+              <img src="project-justice-desk.png" alt="Justice Desk" loading="lazy">
+              <div class="project-overlay">
+                <a href="https://ashraful-alom-1.github.io/Justice-Desk-website/" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
+                <a href="https://github.com/ashraful-alom-1/Justice-Desk-website" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+              </div>
             </div>
-          </div>
-          <div class="project-info">
-            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
-            <h3>Justice Desk</h3>
-            <p>Multi-page legal service website built with HTML, CSS, and JavaScript featuring responsive layouts and professional UI.</p>
-            <div class="project-links">
-              <a href="https://ashraful-alom-1.github.io/Justice-Desk-website/" target="_blank" rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
-              <a href="https://github.com/ashraful-alom-1/Justice-Desk-website" target="_blank" rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+            <div class="project-info">
+              <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+              <h3>Justice Desk</h3>
+              <p>Multi-page legal service website built with HTML, CSS, and JavaScript featuring responsive layouts and
+                professional UI.</p>
+              <div class="project-links">
+                <a href="https://ashraful-alom-1.github.io/Justice-Desk-website/" target="_blank" rel="noopener"
+                  class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
+                <a href="https://github.com/ashraful-alom-1/Justice-Desk-website" target="_blank" rel="noopener"
+                  class="btn btn-sm btn-outline">Source Code</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Project 6 -->
-      <div class="project-card" data-tilt data-aos="fade-up" data-aos-delay="70" data-aos-duration="760">
-        <div class="project-card-inner">
-          <div class="project-img-wrap">
-            <img src="Screenshot 2025-09-06 210904.png" alt="Travel Website" loading="lazy">
-            <div class="project-overlay">
-              <a href="https://ashraful-alom-1.github.io/travel-website-using-html-css-js/" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
-              <a href="https://github.com/ashraful-alom-1/travel-website-using-html-css-js" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+        <!-- Project 6 -->
+        <div class="project-card" data-tilt>
+          <div class="project-card-inner">
+            <div class="project-img-wrap">
+              <img src="project-travel.png" alt="Travel Website" loading="lazy">
+              <div class="project-overlay">
+                <a href="https://ashraful-alom-1.github.io/travel-website-using-html-css-js/" target="_blank"
+                  rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
+                <a href="https://github.com/ashraful-alom-1/travel-website-using-html-css-js" target="_blank"
+                  rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+              </div>
             </div>
-          </div>
-          <div class="project-info">
-            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
-            <h3>Travel Website</h3>
-            <p>Responsive travel website showcasing destinations, booking-style UI, and modern interactive design elements.</p>
-            <div class="project-links">
-              <a href="https://ashraful-alom-1.github.io/travel-website-using-html-css-js/" target="_blank" rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
-              <a href="https://github.com/ashraful-alom-1/travel-website-using-html-css-js" target="_blank" rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+            <div class="project-info">
+              <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+              <h3>Travel Website</h3>
+              <p>Responsive travel website showcasing destinations, booking-style UI, and modern interactive design
+                elements.</p>
+              <div class="project-links">
+                <a href="https://ashraful-alom-1.github.io/travel-website-using-html-css-js/" target="_blank"
+                  rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
+                <a href="https://github.com/ashraful-alom-1/travel-website-using-html-css-js" target="_blank"
+                  rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Project 7 -->
-      <div class="project-card" data-tilt data-aos="fade-up" data-aos-delay="140" data-aos-duration="760">
-        <div class="project-card-inner">
-          <div class="project-img-wrap">
-            <img src="Screenshot 2025-09-10 172439.png" alt="Interactive Calculator" loading="lazy">
-            <div class="project-overlay">
-              <a href="https://ashraful-alom-1.github.io/basics-calculator-by-html-css-js/" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
-              <a href="https://github.com/ashraful-alom-1/basics-calculator-by-html-css-js" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+        <!-- Project 7 -->
+        <div class="project-card" data-tilt>
+          <div class="project-card-inner">
+            <div class="project-img-wrap">
+              <img src="project-calculator.png" alt="Interactive Calculator" loading="lazy">
+              <div class="project-overlay">
+                <a href="https://ashraful-alom-1.github.io/basics-calculator-by-html-css-js/" target="_blank"
+                  rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
+                <a href="https://github.com/ashraful-alom-1/basics-calculator-by-html-css-js" target="_blank"
+                  rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+              </div>
             </div>
-          </div>
-          <div class="project-info">
-            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
-            <h3>Interactive Calculator</h3>
-            <p>Interactive calculator application with keyboard support, DOM manipulation, and real-time mathematical operations.</p>
-            <div class="project-links">
-              <a href="https://ashraful-alom-1.github.io/basics-calculator-by-html-css-js/" target="_blank" rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
-              <a href="https://github.com/ashraful-alom-1/basics-calculator-by-html-css-js" target="_blank" rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+            <div class="project-info">
+              <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+              <h3>Interactive Calculator</h3>
+              <p>Interactive calculator application with keyboard support, DOM manipulation, and real-time mathematical
+                operations.</p>
+              <div class="project-links">
+                <a href="https://ashraful-alom-1.github.io/basics-calculator-by-html-css-js/" target="_blank"
+                  rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
+                <a href="https://github.com/ashraful-alom-1/basics-calculator-by-html-css-js" target="_blank"
+                  rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Project 8 -->
-      <div class="project-card" data-tilt data-aos="fade-up" data-aos-delay="0" data-aos-duration="760">
-        <div class="project-card-inner">
-          <div class="project-img-wrap">
-            <img src="login.png" alt="Basic Login Page" loading="lazy">
-            <div class="project-overlay">
-              <a href="https://ashraful-alom-1.github.io/basic-login-page/" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
-              <a href="https://github.com/ashraful-alom-1/basic-login-page" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+        <!-- Project 8 -->
+        <div class="project-card" data-tilt>
+          <div class="project-card-inner">
+            <div class="project-img-wrap">
+              <img src="project-login.png" alt="Basic Login Page" loading="lazy">
+              <div class="project-overlay">
+                <a href="https://ashraful-alom-1.github.io/basic-login-page/" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fas fa-external-link-alt"></i> Live</a>
+                <a href="https://github.com/ashraful-alom-1/basic-login-page" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+              </div>
             </div>
-          </div>
-          <div class="project-info">
-            <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
-            <h3>Basic Login Page</h3>
-            <p>Frontend login interface with JavaScript form validation, responsive layout, and clean authentication UI design.</p>
-            <div class="project-links">
-              <a href="https://ashraful-alom-1.github.io/basic-login-page/" target="_blank" rel="noopener" class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
-              <a href="https://github.com/ashraful-alom-1/basic-login-page" target="_blank" rel="noopener" class="btn btn-sm btn-outline">Source Code</a>
+            <div class="project-info">
+              <div class="project-tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+              <h3>Basic Login Page</h3>
+              <p>Frontend login interface with JavaScript form validation, responsive layout, and clean authentication
+                UI design.</p>
+              <div class="project-links">
+                <a href="https://ashraful-alom-1.github.io/basic-login-page/" target="_blank" rel="noopener"
+                  class="btn btn-sm">Live Demo <i class="fas fa-arrow-right"></i></a>
+                <a href="https://github.com/ashraful-alom-1/basic-login-page" target="_blank" rel="noopener"
+                  class="btn btn-sm btn-outline">Source Code</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Project 9 -->
-      <div class="project-card" data-tilt data-aos="fade-up" data-aos-delay="140" data-aos-duration="760">
-        <div class="project-card-inner">
-          <div class="project-img-wrap project-img-placeholder">
-            <i class="devicon-c-plain colored"></i>
-            <div class="project-overlay">
-              <a href="https://github.com/ashraful-alom-1/C-language-programs" target="_blank" rel="noopener" class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+        <!-- Project 9 -->
+        <div class="project-card" data-tilt>
+          <div class="project-card-inner">
+            <div class="project-img-wrap project-img-placeholder">
+              <i class="devicon-c-plain colored"></i>
+              <div class="project-overlay">
+                <a href="https://github.com/ashraful-alom-1/C-language-programs" target="_blank" rel="noopener"
+                  class="project-overlay-btn"><i class="fab fa-github"></i> Code</a>
+              </div>
             </div>
-          </div>
-          <div class="project-info">
-            <div class="project-tags"><span>C Language</span><span>PDF</span></div>
-            <h3>C Language Programs</h3>
-            <p>Collection of C programming problems and solutions covering fundamental programming concepts and logic building.</p>
-            <div class="project-links">
-              <a href="https://github.com/ashraful-alom-1/C-language-programs" target="_blank" rel="noopener" class="btn btn-sm btn-outline">View Code (PDF)</a>
+            <div class="project-info">
+              <div class="project-tags"><span>C Language</span><span>PDF</span></div>
+              <h3>C Language Programs</h3>
+              <p>Collection of C programming problems and solutions covering fundamental programming concepts and logic
+                building.</p>
+              <div class="project-links">
+                <a href="https://github.com/ashraful-alom-1/C-language-programs" target="_blank" rel="noopener"
+                  class="btn btn-sm btn-outline">View Code (PDF)</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
-  </div>
-</section>
+  </section>
   <!-- Skills Section -->
   <section id="skills" class="section skills">
     <div class="container">
-      <div class="section-label" data-aos="fade-right" data-aos-duration="700">03 — Skills</div>
-      <h2 class="section-title" id="skills-heading" data-aos="fade-up" data-aos-delay="80" data-aos-duration="750">Technical<br><em>arsenal</em></h2>
+      <div class="section-label">03 — Skills</div>
+      <h2 class="section-title" id="skills-heading">
+        Technical<br><em>arsenal</em></h2>
       <div class="skills-container">
-        <div class="skill-category" data-tilt data-aos="zoom-in-up" data-aos-delay="0" data-aos-duration="720">
+        <div class="skill-category" data-tilt>
           <div class="skill-cat-header">
             <div class="skill-cat-icon"><i class="fas fa-laptop-code"></i></div>
             <h3>Front-End</h3>
@@ -457,7 +543,7 @@
             <span class="skill-chip"><i class="devicon-react-original colored"></i>React</span>
           </div>
         </div>
-        <div class="skill-category" data-tilt data-aos="zoom-in-up" data-aos-delay="80" data-aos-duration="720">
+        <div class="skill-category" data-tilt>
           <div class="skill-cat-header">
             <div class="skill-cat-icon"><i class="fas fa-tools"></i></div>
             <h3>Tools & Version Control</h3>
@@ -468,7 +554,7 @@
             <span class="skill-chip"><i class="devicon-vscode-plain colored"></i>VS Code</span>
           </div>
         </div>
-        <div class="skill-category" data-tilt data-aos="zoom-in-up" data-aos-delay="160" data-aos-duration="720">
+        <div class="skill-category" data-tilt>
           <div class="skill-cat-header">
             <div class="skill-cat-icon"><i class="fas fa-terminal"></i></div>
             <h3>Programming Languages</h3>
@@ -478,7 +564,7 @@
             <span class="skill-chip"><i class="devicon-cplusplus-plain colored"></i>C++</span>
           </div>
         </div>
-        <div class="skill-category" data-tilt data-aos="zoom-in-up" data-aos-delay="240" data-aos-duration="720">
+        <div class="skill-category" data-tilt>
           <div class="skill-cat-header">
             <div class="skill-cat-icon"><i class="fas fa-table"></i></div>
             <h3>Data Entry</h3>
@@ -495,10 +581,11 @@
   <!-- Education Section -->
   <section class="section education" id="education">
     <div class="container">
-      <div class="section-label" data-aos="fade-right" data-aos-duration="700">04 — Education</div>
-      <h2 class="section-title" id="education-heading" data-aos="fade-up" data-aos-delay="80" data-aos-duration="750">Academic<br><em>journey</em></h2>
+      <div class="section-label">04 — Education</div>
+      <h2 class="section-title" id="education-heading">
+        Academic<br><em>journey</em></h2>
       <div class="education-cards">
-        <div class="edu-card" data-aos="fade-right" data-aos-delay="0" data-aos-duration="750">
+        <div class="edu-card">
           <div class="edu-icon"><i class="fas fa-graduation-cap"></i></div>
           <div class="edu-body">
             <div class="edu-date">2022 — 2026 (Expected)</div>
@@ -510,7 +597,7 @@
             <div class="edu-progress-text">88% Completed</div>
           </div>
         </div>
-        <div class="edu-card" data-aos="fade-right" data-aos-delay="90" data-aos-duration="750">
+        <div class="edu-card">
           <div class="edu-icon"><i class="fas fa-school"></i></div>
           <div class="edu-body">
             <div class="edu-date">2022</div>
@@ -518,7 +605,7 @@
             <p>Lengtisinga H.S. School</p>
           </div>
         </div>
-        <div class="edu-card" data-aos="fade-right" data-aos-delay="180" data-aos-duration="750">
+        <div class="edu-card">
           <div class="edu-icon"><i class="fas fa-book-open"></i></div>
           <div class="edu-body">
             <div class="edu-date">2020</div>
@@ -533,16 +620,24 @@
   <!-- Certifications Section -->
   <section class="section certifications">
     <div class="container">
-      <div class="section-label" data-aos="fade-right" data-aos-duration="700">05 — Credentials</div>
-      <h2 class="section-title" id="certifications-heading" data-aos="fade-up" data-aos-delay="80" data-aos-duration="750">Certifications<br><em>&amp; awards</em></h2>
+      <div class="section-label">05 — Credentials</div>
+      <h2 class="section-title" id="certifications-heading"
+>Certifications<br><em>&amp; awards</em></h2>
       <div class="certs-grid">
-        <div class="cert-item" data-aos="fade-up" data-aos-delay="0" data-aos-duration="680"><i class="fas fa-certificate"></i><span>HTML — KG Coding</span></div>
-        <div class="cert-item" data-aos="fade-up" data-aos-delay="60" data-aos-duration="680"><i class="fas fa-certificate"></i><span>CSS — Complete Coding</span></div>
-        <div class="cert-item" data-aos="fade-up" data-aos-delay="120" data-aos-duration="680"><i class="fas fa-certificate"></i><span>NPTEL: Business Ethics — IIT Kharagpur</span></div>
-        <div class="cert-item" data-aos="fade-up" data-aos-delay="180" data-aos-duration="680"><i class="fas fa-certificate"></i><span>NPTEL: Air Pollution — IIT Roorkee</span></div>
-        <div class="cert-item" data-aos="fade-up" data-aos-delay="240" data-aos-duration="680"><i class="fas fa-certificate"></i><span>NPTEL: IoT — IIT Kharagpur</span></div>
-        <div class="cert-item" data-aos="fade-up" data-aos-delay="300" data-aos-duration="680"><i class="fas fa-certificate"></i><span>NPTEL: Cloud Computing — IIT Kharagpur</span></div>
-        <div class="cert-item" data-aos="fade-up" data-aos-delay="360" data-aos-duration="680"><i class="fas fa-certificate"></i><span>Mini Soccer — DCTM</span></div>
+        <div class="cert-item"><i
+            class="fas fa-certificate"></i><span>HTML — KG Coding</span></div>
+        <div class="cert-item"><i
+            class="fas fa-certificate"></i><span>CSS — Complete Coding</span></div>
+        <div class="cert-item"><i
+            class="fas fa-certificate"></i><span>NPTEL: Business Ethics — IIT Kharagpur</span></div>
+        <div class="cert-item"><i
+            class="fas fa-certificate"></i><span>NPTEL: Air Pollution — IIT Roorkee</span></div>
+        <div class="cert-item"><i
+            class="fas fa-certificate"></i><span>NPTEL: IoT — IIT Kharagpur</span></div>
+        <div class="cert-item"><i
+            class="fas fa-certificate"></i><span>NPTEL: Cloud Computing — IIT Kharagpur</span></div>
+        <div class="cert-item"><i
+            class="fas fa-certificate"></i><span>Mini Soccer — DCTM</span></div>
       </div>
     </div>
   </section>
@@ -550,16 +645,20 @@
   <!-- Strengths Section -->
   <section class="section strengths">
     <div class="container">
-      <div class="section-label" data-aos="fade-right" data-aos-duration="700">06 — Traits</div>
-      <h2 class="section-title" id="strengths-heading" data-aos="fade-up" data-aos-delay="80" data-aos-duration="750">Key<br><em>strengths</em></h2>
+      <div class="section-label">06 — Traits</div>
+      <h2 class="section-title" id="strengths-heading">
+        Key<br><em>strengths</em></h2>
       <div class="strengths-grid">
-        <span class="strength-tag" data-aos="zoom-in" data-aos-delay="0" data-aos-duration="600">Quick Learner</span>
-        <span class="strength-tag" data-aos="zoom-in" data-aos-delay="60" data-aos-duration="600">Problem Solver</span>
-        <span class="strength-tag" data-aos="zoom-in" data-aos-delay="120" data-aos-duration="600">Good Listener</span>
-        <span class="strength-tag" data-aos="zoom-in" data-aos-delay="180" data-aos-duration="600">Adaptability</span>
-        <span class="strength-tag" data-aos="zoom-in" data-aos-delay="240" data-aos-duration="600">Time Management</span>
-        <span class="strength-tag" data-aos="zoom-in" data-aos-delay="300" data-aos-duration="600">Self-Motivation</span>
-        <span class="strength-tag" data-aos="zoom-in" data-aos-delay="360" data-aos-duration="600">Team Collaboration</span>
+        <span class="strength-tag">Quick Learner</span>
+        <span class="strength-tag">Problem Solver</span>
+        <span class="strength-tag">Good Listener</span>
+        <span class="strength-tag">Adaptability</span>
+        <span class="strength-tag">Time
+          Management</span>
+        <span class="strength-tag"
+>Self-Motivation</span>
+        <span class="strength-tag">Team
+          Collaboration</span>
       </div>
     </div>
   </section>
@@ -568,7 +667,7 @@
   <section class="section misc" aria-label="Languages and hobbies">
     <div class="container">
       <div class="misc-grid">
-        <div class="misc-card" data-aos="fade-up" data-aos-delay="0" data-aos-duration="720">
+        <div class="misc-card">
           <h3 class="misc-title">Languages</h3>
           <ul class="misc-list">
             <li><span class="misc-lang">Assamese</span><span class="misc-level">Native</span></li>
@@ -577,7 +676,7 @@
             <li><span class="misc-lang">English</span><span class="misc-level">Elementary</span></li>
           </ul>
         </div>
-        <div class="misc-card" data-aos="fade-up" data-aos-delay="120" data-aos-duration="720">
+        <div class="misc-card">
           <h3 class="misc-title">Hobbies</h3>
           <ul class="misc-list">
             <li><span class="misc-lang"><i class="fas fa-camera"></i> Photography</span></li>
@@ -592,11 +691,13 @@
   <!-- Contact Section -->
   <section id="contact" class="section contact">
     <div class="container">
-      <div class="section-label" data-aos="fade-right" data-aos-duration="700">07 — Contact</div>
-      <h2 class="section-title" id="contact-heading" data-aos="fade-up" data-aos-delay="80" data-aos-duration="750">Let's work<br><em>together</em></h2>
+      <div class="section-label">07 — Contact</div>
+      <h2 class="section-title" id="contact-heading">
+        Let's work<br><em>together</em></h2>
       <div class="contact-content">
-        <div class="contact-info" data-aos="fade-right" data-aos-delay="120" data-aos-duration="800">
-          <p>Feel free to reach out for collaboration or just to say hello! I'm always open to discussing new projects, creative ideas, or opportunities.</p>
+        <div class="contact-info">
+          <p>Feel free to reach out for collaboration or just to say hello! I'm always open to discussing new projects,
+            creative ideas, or opportunities.</p>
           <div class="contact-details">
             <div class="contact-item">
               <div class="contact-icon"><i class="fas fa-envelope"></i></div>
@@ -608,13 +709,17 @@
             </div>
           </div>
           <div class="contact-social">
-            <a href="https://github.com/ashraful-alom-1" class="social-btn" aria-label="GitHub" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/ashraful-alom-612a05268" class="social-btn" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
-            <a href="https://www.facebook.com/profile.php?id=61578589231361" class="social-btn" aria-label="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.instagram.com/ashrafulalom.03/" class="social-btn" aria-label="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+            <a href="https://github.com/ashraful-alom-1" class="social-btn" aria-label="GitHub" target="_blank"
+              rel="noopener"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/ashraful-alom-612a05268" class="social-btn" aria-label="LinkedIn"
+              target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61578589231361" class="social-btn" aria-label="Facebook"
+              target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/ashrafulalom.03/" class="social-btn" aria-label="Instagram"
+              target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
           </div>
         </div>
-        <form class="contact-form" id="contact-form" data-aos="fade-left" data-aos-delay="170" data-aos-duration="800">
+        <form class="contact-form" id="contact-form">
           <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" placeholder="Your full name" required autocomplete="name">
@@ -625,7 +730,8 @@
           </div>
           <div class="form-group">
             <label for="message">Message</label>
-            <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required autocomplete="off"></textarea>
+            <textarea id="message" name="message" rows="5" placeholder="Tell me about your project..." required
+              autocomplete="off"></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-full">
             <span>Send Message</span>
@@ -651,7 +757,7 @@
           <a href="#about">About</a>
           <a href="#projects">Projects</a>
           <a href="#contact">Contact</a>
-          <a href="Ashraful Alom  Full Stack Developer Resume.pdf" download>CV</a>
+          <a href="ashraful-alom-resume.pdf" download>CV</a>
         </div>
       </div>
     </div>
@@ -659,12 +765,14 @@
 
   <!-- AI Portfolio Assistant -->
   <section class="ai-assistant" id="ai-assistant" aria-label="AI portfolio assistant">
-    <button class="ai-chat-toggle" id="ai-chat-toggle" type="button" aria-label="Open AI portfolio assistant" aria-controls="ai-chat-panel" aria-expanded="false">
+    <button class="ai-chat-toggle" id="ai-chat-toggle" type="button" aria-label="Open AI portfolio assistant"
+      aria-controls="ai-chat-panel" aria-expanded="false">
       <span class="ai-toggle-pulse" aria-hidden="true"></span>
       <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
     </button>
 
-    <div class="ai-chat-panel" id="ai-chat-panel" role="dialog" aria-modal="false" aria-labelledby="ai-chat-title" aria-hidden="true">
+    <div class="ai-chat-panel" id="ai-chat-panel" role="dialog" aria-modal="false" aria-labelledby="ai-chat-title"
+      aria-hidden="true">
       <div class="ai-chat-header">
         <div class="ai-chat-identity">
           <div class="ai-avatar" aria-hidden="true">
@@ -720,17 +828,20 @@
         </label>
         <label>
           <span>Message</span>
-          <textarea name="message" rows="3" required placeholder="Tell Ashraful about the role, project, or collaboration..."></textarea>
+          <textarea name="message" rows="3" required
+            placeholder="Tell Ashraful about the role, project, or collaboration..."></textarea>
         </label>
         <div class="ai-lead-actions">
-          <button class="btn btn-primary" type="submit"><span>Send Inquiry</span><i class="fas fa-paper-plane" aria-hidden="true"></i></button>
+          <button class="btn btn-primary" type="submit"><span>Send Inquiry</span><i class="fas fa-paper-plane"
+              aria-hidden="true"></i></button>
           <button class="btn btn-outline" id="ai-cancel-lead" type="button">Cancel</button>
         </div>
       </form>
 
       <form class="ai-input-form" id="ai-input-form">
         <label class="sr-only" for="ai-input">Ask about Ashraful's portfolio</label>
-        <textarea id="ai-input" rows="1" placeholder="Ask about projects, skills, resume, or hiring..." maxlength="1200"></textarea>
+        <textarea id="ai-input" rows="1" placeholder="Ask about projects, skills, resume, or hiring..."
+          maxlength="1200"></textarea>
         <div class="ai-input-actions">
           <button class="ai-icon-btn" id="ai-voice-btn" type="button" aria-label="Start voice input">
             <i class="fas fa-microphone" aria-hidden="true"></i>
@@ -756,6 +867,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
+
 </html>
