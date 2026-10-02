@@ -6,7 +6,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const contactRoutes = require('./routes/contact');
-const assistantRoutes = require('./routes/assistant');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -73,16 +72,12 @@ app.use(express.json({ limit: '20kb' }));
 
 // Routes
 app.use('/api/contact', rateLimit({ windowMs: 15 * 60 * 1000, max: 8 }));
-app.use('/api/assistant', rateLimit({ windowMs: 60 * 1000, max: 12 }));
-app.use('/api/github-summary', rateLimit({ windowMs: 60 * 1000, max: 20 }));
 app.use('/api', contactRoutes);
-app.use('/api', assistantRoutes);
 
 // Basic route for testing (removed API key check)
 app.get('/', (req, res) => {
   res.json({
     message: 'Portfolio Backend API is running!',
-    assistantConfigured: true,
     emailConfigured: Boolean(process.env.RESEND_API_KEY)
   });
 });
