@@ -135,7 +135,7 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
     const springConfig = { type: "spring", bounce: 0.25, duration: 0.8 };
 
     // Fade up animations
-    inView(".section-label, .section-title, .project-card, .skill-category, .misc-card", (info) => {
+    inView(".section-label, .section-title, .project-card, .skill-category, .misc-card, .faq-item", (info) => {
       animate(info.target, { opacity: [0, 1], y: [40, 0] }, { ...springConfig, delay: 0.1 });
     });
 
@@ -708,7 +708,48 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
         duration: 0.62,
         ease: 'power3.out',
         stagger: 0.06
-      }, '-=0.36');
+      }, '-=0.36')
+      .fromTo('.hero-visual-wrapper', { opacity: 0, y: 30, scale: 0.96 }, {
+        opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out'
+      }, '-=0.4')
+      .fromTo('.hero-float-element', { opacity: 0, y: 15 }, {
+        opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.5)', stagger: 0.1
+      }, '-=0.3');
+
+    if (!prefersReducedMotion) {
+      gsap.to('.hero-visual-wrapper', { y: -10, rotation: 0.5, duration: 4.5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+      gsap.to('.float-1', { y: -8, duration: 3, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.2 });
+      gsap.to('.float-2', { y: -5, duration: 3.5, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.5 });
+      gsap.to('.float-3', { y: -10, duration: 4, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.1 });
+    }
+
+    ScrollTrigger.create({
+      trigger: '#services',
+      start: 'top 75%',
+      once: true,
+      onEnter: () => {
+        gsap.fromTo('.service-card', 
+          { opacity: 0, y: 35, scale: 0.97 }, 
+          { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'power3.out', stagger: 0.15 }
+        );
+      }
+    });
+
+    ScrollTrigger.create({
+      trigger: '#process',
+      start: 'top 70%',
+      once: true,
+      onEnter: () => {
+        const isMobile = window.innerWidth <= 768;
+        const tl = gsap.timeline();
+        tl.to('.process-line-fill', isMobile ? { height: '100%', duration: 1.5, ease: 'power1.inOut' } : { width: '100%', duration: 1.5, ease: 'power1.inOut' }, 0)
+          .fromTo('.process-step', 
+            { opacity: 0, y: 25 }, 
+            { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.25 }, 
+            0.2
+          );
+      }
+    });
 
     // Soft parallax layers
     gsap.to('.liquid-blob', {
