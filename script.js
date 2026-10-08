@@ -721,6 +721,7 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
       gsap.to('.float-1', { y: -8, duration: 3, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.2 });
       gsap.to('.float-2', { y: -5, duration: 3.5, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.5 });
       gsap.to('.float-3', { y: -10, duration: 4, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.1 });
+      gsap.to('.float-4', { y: -6, duration: 3.2, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.3 });
     }
 
     ScrollTrigger.create({
