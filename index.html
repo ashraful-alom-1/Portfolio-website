@@ -1074,8 +1074,8 @@
   <script src="liquid-glass.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // 1. Permanent Structural Glass (Nav & Contact)
       if (typeof liquidGlass === 'function') {
+        // 1a. Permanent Structural Glass (Nav & Contact)
         const structuralElements = document.querySelectorAll('.nav-container, .contact-wrapper, .btn-nav');
         structuralElements.forEach(el => {
           liquidGlass(el, {
@@ -1085,6 +1085,20 @@
             mapBlur: 16,       // Smoother transition from edge to center
             blur: 3,           // Low blur to preserve background distortion visibility
             saturate: 1.8      // High saturation for vibrant optics
+          });
+        });
+
+        // 1b. Hero Floating Liquid Glass
+        const heroFloatElements = document.querySelectorAll('.hero-float-element');
+        heroFloatElements.forEach(el => {
+          const isCard = el.classList.contains('hero-code-panel');
+          liquidGlass(el, {
+            scale: isCard ? -112 : -85, // Milder refraction for small badges
+            chroma: 6,
+            border: 0.07,
+            mapBlur: 12,
+            blur: 3,
+            saturate: 1.5
           });
         });
       }

@@ -224,13 +224,13 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
       }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Background gradient — soft blue-white liquid light (tuned for glass bg)
+      // Background gradient — subtle cobalt radial glow
       const grad = ctx.createRadialGradient(
-        canvas.width * 0.5, canvas.height * 0.3, 0,
-        canvas.width * 0.5, canvas.height * 0.3, canvas.width * 0.7
+        canvas.width * 0.7, canvas.height * 0.5, 0,
+        canvas.width * 0.7, canvas.height * 0.5, canvas.width * 0.6
       );
-      grad.addColorStop(0, 'rgba(160,195,255,0.035)');
-      grad.addColorStop(0.5, 'rgba(120,160,255,0.02)');
+      grad.addColorStop(0, 'rgba(44, 52, 128, 0.15)'); /* Cobalt */
+      grad.addColorStop(0.5, 'rgba(44, 52, 128, 0.05)');
       grad.addColorStop(1, 'transparent');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -241,7 +241,7 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
         const op = s.op + Math.sin(t * s.ts * 60) * 0.12;
         ctx.beginPath();
         ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${Math.max(0.1, Math.min(0.9, op))})`;
+        ctx.fillStyle = `rgba(255,255,255,${Math.max(0.02, Math.min(0.3, op * 0.4))})`;
         ctx.fill();
       });
 
@@ -249,7 +249,7 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
       for (let i = shootingStars.length - 1; i >= 0; i--) {
         const ss = shootingStars[i];
         const grd = ctx.createLinearGradient(ss.x, ss.y, ss.x - ss.len * (ss.vx / 8), ss.y - ss.len * (ss.vy / 8));
-        grd.addColorStop(0, `rgba(168,199,255,${ss.op})`);
+        grd.addColorStop(0, `rgba(168,199,255,${ss.op * 0.4})`);
         grd.addColorStop(1, 'transparent');
         ctx.beginPath();
         ctx.moveTo(ss.x, ss.y);
