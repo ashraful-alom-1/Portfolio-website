@@ -252,12 +252,14 @@
       </div>
       <div class="hero-content-right">
         <div class="hero-visual-wrapper">
+          
+          <!-- Browser Window -->
           <div class="hero-visual-card">
             <div class="hero-visual-header">
               <div class="dot dot-r"></div>
               <div class="dot dot-y"></div>
               <div class="dot dot-g"></div>
-              <div class="hero-visual-url">ashraful.alom</div>
+              <div class="hero-visual-url"><i class="fas fa-lock" style="font-size:0.6rem; margin-right:4px; color:var(--text-muted)"></i> ashraful.alom/portfolio</div>
             </div>
             <div class="hero-visual-body">
               <div class="mini-website">
@@ -266,34 +268,57 @@
                   <div class="mini-links">
                     <div class="mini-link"></div>
                     <div class="mini-link"></div>
+                    <div class="mini-link"></div>
                   </div>
                 </div>
                 <div class="mini-hero">
-                  <div class="mini-h1">Modern Web Solutions</div>
-                  <div class="mini-p">Built for performance and growth.</div>
-                  <div class="mini-btn">View Projects</div>
+                  <div class="mini-h1">Business Websites</div>
+                  <div class="mini-p">High-performance custom solutions.</div>
+                  <div class="mini-btn">Get Started</div>
                 </div>
                 <div class="mini-cards">
                   <div class="mini-card">
-                    <div class="mini-icon"></div>
+                    <div class="mini-icon"><i class="devicon-html5-plain colored"></i></div>
                     <div class="mini-card-title"></div>
                   </div>
                   <div class="mini-card">
-                    <div class="mini-icon"></div>
+                    <div class="mini-icon"><i class="devicon-css3-plain colored"></i></div>
+                    <div class="mini-card-title"></div>
+                  </div>
+                  <div class="mini-card">
+                    <div class="mini-icon"><i class="devicon-javascript-plain colored"></i></div>
                     <div class="mini-card-title"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="hero-float-element float-1"><i class="devicon-react-original colored"></i></div>
-          <div class="hero-float-element float-2"><span class="pulse-indicator"></span> SEO Ready</div>
-          <div class="hero-float-element float-3">
-            <div class="code-snippet">
-              <span class="code-keyword">const</span> <span class="code-var">web</span> = <span
-                class="code-string">'Fast'</span>;
+          
+          <!-- Floating Code Editor Panel -->
+          <div class="hero-float-element float-1 hero-code-panel">
+            <div class="code-panel-header">
+              <span>script.js</span>
+              <i class="devicon-javascript-plain colored"></i>
+            </div>
+            <div class="code-panel-body">
+              <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">developer</span> = {</div>
+              <div class="code-line indent"><span class="code-keyword">name</span>: <span class="code-string">'Ashraful Alom'</span>,</div>
+              <div class="code-line indent"><span class="code-keyword">skills</span>: [<span class="code-string">'React'</span>, <span class="code-string">'C/C++'</span>, <span class="code-string">'Git'</span>]</div>
+              <div class="code-line">};</div>
+              <div class="code-line"><span class="code-var">buildProject</span>(<span class="code-var">developer</span>);</div>
             </div>
           </div>
+          
+          <!-- Floating Tech Badges -->
+          <div class="hero-float-element float-2 tech-badge tech-react"><i class="devicon-react-original colored"></i> React</div>
+          <div class="hero-float-element float-3 tech-badge tech-git"><i class="devicon-git-plain colored"></i> Git</div>
+          
+          <!-- Status Indicator -->
+          <div class="hero-float-element float-4 status-indicator">
+            <span class="pulse-indicator"></span>
+            <span>Systems operational</span>
+          </div>
+
         </div>
       </div>
     </div>
@@ -1049,8 +1074,8 @@
   <script src="liquid-glass.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      // 1. Permanent Structural Glass (Nav & Contact)
       if (typeof liquidGlass === 'function') {
+        // 1a. Permanent Structural Glass (Nav & Contact)
         const structuralElements = document.querySelectorAll('.nav-container, .contact-wrapper, .btn-nav');
         structuralElements.forEach(el => {
           liquidGlass(el, {
@@ -1060,6 +1085,20 @@
             mapBlur: 16,       // Smoother transition from edge to center
             blur: 3,           // Low blur to preserve background distortion visibility
             saturate: 1.8      // High saturation for vibrant optics
+          });
+        });
+
+        // 1b. Hero Floating Liquid Glass
+        const heroFloatElements = document.querySelectorAll('.hero-float-element');
+        heroFloatElements.forEach(el => {
+          const isCard = el.classList.contains('hero-code-panel');
+          liquidGlass(el, {
+            scale: isCard ? -112 : -85, // Milder refraction for small badges
+            chroma: 6,
+            border: 0.07,
+            mapBlur: 12,
+            blur: 3,
+            saturate: 1.5
           });
         });
       }
