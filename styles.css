@@ -284,12 +284,13 @@ section,
 
 /* === HERO === */
 .hero {
-  min-height: 100vh;
+  min-height: min(100vh, 1000px);
   display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding-top: 80px;
+  padding-top: 100px;
+  padding-bottom: 60px;
 }
 
 #hero-canvas {
@@ -337,8 +338,10 @@ section,
     flex-direction: column;
   }
   .hero-content-right {
-    height: 300px;
+    height: auto;
+    min-height: 300px;
     margin-top: 40px;
+    margin-bottom: 40px;
     width: 100%;
   }
 }
@@ -3603,10 +3606,26 @@ html {
 }
 
 @media (max-width: 1024px) {
-  .float-1 { bottom: -10px; right: -10px; }
-  .float-2 { top: -10px; right: -10px; }
-  .float-3 { top: 15%; left: -10px; }
-  .float-4 { bottom: 10%; left: -10px; }
+  .hero-visual-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    height: auto;
+  }
+  .hero-float-element {
+    position: relative;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100%;
+    max-width: 320px;
+    justify-content: flex-start;
+  }
+  .hero-code-panel {
+    font-size: 0.55rem;
+  }
 }
 
 .pulse-indicator {
