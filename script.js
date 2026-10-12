@@ -40,7 +40,8 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
 
   function getApiBaseUrls() {
     const primary = getApiBaseUrl();
-    return [primary];
+    if (primary === productionApiBase) return [productionApiBase];
+    return [primary, productionApiBase];
   }
 
   async function postApiJson(path, payload) {
@@ -78,31 +79,126 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
   }
 
   /* =========================================
-     Preloader
+     Cinematic Welcome Intro (Stage 1)
      ========================================= */
-  function initPreloader() {
-    const preloader = document.getElementById('preloader');
-    const fill = document.getElementById('preloader-fill');
-    const text = document.getElementById('preloader-text');
-    if (!preloader) return;
+  function initWelcomeIntro(onIntroComplete) {
+    const introEl = document.getElementById('welcome-intro');
+    if (!introEl) {
+      if (typeof onIntroComplete === 'function') onIntroComplete();
+      return;
+    }
 
-    const messages = ['Initializing portfolio...', 'Loading motion system...', 'Preparing visuals...', 'Ready'];
-    let progress = 0;
-    let msgIndex = 0;
-    const timer = setInterval(() => {
-      progress = Math.min(progress + Math.random() * 18 + 9, 100);
-      if (fill) fill.style.width = progress + '%';
-      if (text && msgIndex < messages.length - 1 && progress >= (msgIndex + 1) * 25) {
-        msgIndex++;
-        text.textContent = messages[msgIndex];
+    const skipBtn = document.getElementById('skip-intro');
+
+    // If visitor prefers reduced motion, bypass intro immediately
+    if (prefersReducedMotion) {
+      introEl.classList.add('is-hidden');
+      introEl.style.display = 'none';
+      if (typeof onIntroComplete === 'function') onIntroComplete();
+      return;
+    }
+
+    // Ensure intro is visible on every load / reload
+    introEl.classList.remove('is-hidden');
+    introEl.style.display = 'flex';
+    introEl.style.opacity = '1';
+
+    let completed = false;
+    let introTl = null;
+
+    function finishIntro() {
+      if (completed) return;
+      completed = true;
+      if (introTl) {
+        introTl.kill();
+        introTl = null;
       }
-      if (progress >= 100) {
-        clearInterval(timer);
-        setTimeout(() => {
-          preloader.classList.add('done');
-        }, 360);
+
+      if (typeof gsap !== 'undefined') {
+        gsap.to(introEl, {
+          opacity: 0,
+          y: -24,
+          duration: 0.65,
+          ease: 'power3.inOut',
+          onComplete: () => {
+            introEl.classList.add('is-hidden');
+            introEl.style.display = 'none';
+            if (typeof onIntroComplete === 'function') onIntroComplete();
+          }
+        });
+      } else {
+        introEl.classList.add('is-hidden');
+        introEl.style.display = 'none';
+        if (typeof onIntroComplete === 'function') onIntroComplete();
       }
-    }, 95);
+    }
+
+    if (skipBtn) {
+      skipBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        finishIntro();
+      }, { once: true });
+    }
+
+    if (typeof gsap !== 'undefined') {
+      // Reset initial values before playing
+      gsap.set('.welcome-brand', { opacity: 0, scale: 0.92, y: 14 });
+      gsap.set('.welcome-word', { opacity: 0, y: 18 });
+      gsap.set('#welcome-tagline', { opacity: 0, y: 12 });
+      gsap.set('.welcome-controls', { opacity: 0, y: 10 });
+      gsap.set('#welcome-meter-fill', { width: '0%' });
+
+      introTl = gsap.timeline({ onComplete: finishIntro });
+
+      // Step 1: Smooth reveal of the brand monogram and full typography
+      introTl
+        .to('.welcome-brand', {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power2.out'
+        })
+        .to('.welcome-word', {
+          opacity: 1,
+          y: 0,
+          duration: 0.45,
+          ease: 'power3.out',
+          stagger: 0.07
+        }, '-=0.15')
+        .to('#welcome-tagline', {
+          opacity: 1,
+          y: 0,
+          duration: 0.45,
+          ease: 'power2.out'
+        }, '-=0.1')
+        .to('.welcome-controls', {
+          opacity: 1,
+          y: 0,
+          duration: 0.35,
+          ease: 'power2.out'
+        }, '-=0.2')
+        .addLabel('hold'); // At this label, monogram, full sentence, and tagline are 100% visible
+
+      // Step 2: 5-SECOND HOLD
+      // Hold the complete welcome screen for approximately 5 seconds.
+      // Progress indicator fills smoothly across this 5-second hold and reaches 100% as the hold concludes.
+      introTl
+        .to('#welcome-meter-fill', {
+          width: '100%',
+          duration: 5.0,
+          ease: 'linear'
+        }, 'hold')
+        .to({}, { duration: 5.0 }, 'hold'); // Synchronized 5.0-second hold
+
+    } else {
+      // Fallback if GSAP is unavailable: keep visible for 5s then transition
+      setTimeout(finishIntro, 5000);
+    }
+
+    // Safe fallback timeout: 11 seconds ensures the 5-second hold is never prematurely cut off,
+    // while providing a guaranteed exit if timeline is blocked by background tab throttle
+    setTimeout(finishIntro, 11000);
   }
 
   /* =========================================
@@ -134,8 +230,8 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
   function initMotionAnimations() {
     const springConfig = { type: "spring", bounce: 0.25, duration: 0.8 };
 
-    // Fade up animations
-    inView(".section-label, .section-title, .project-card, .skill-category, .misc-card, .faq-item", (info) => {
+    // Fade up animations (only for non-GSAP elements to avoid transform conflicts)
+    inView(".section-label, .section-title, .misc-card", (info) => {
       animate(info.target, { opacity: [0, 1], y: [40, 0] }, { ...springConfig, delay: 0.1 });
     });
 
@@ -145,7 +241,7 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
     });
 
     // Fade left animations
-    inView(".about-text, .contact-form", (info) => {
+    inView(".about-text, .contact-form-wrapper", (info) => {
       animate(info.target, { opacity: [0, 1], x: [40, 0] }, { ...springConfig, delay: 0.2 });
     });
 
@@ -298,11 +394,14 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
   /* =========================================
      Hero Typed Effect
      ========================================= */
+  let heroTypedStarted = false;
   function initHeroTyped() {
+    if (heroTypedStarted) return;
+    heroTypedStarted = true;
     const typedText = document.getElementById('typed-text');
     if (!typedText) return;
     typedText.textContent = '';
-    const texts = ['Full Stack Developer', 'Quick Learner', 'Problem Solver', 'UI Enthusiast'];
+    const texts = ['Web Developer & Full-Stack Developer', 'Frontend Engineer', 'Custom Web Solutions'];
     let tIndex = 0, cIndex = 0, deleting = false, speed = 100;
 
     function tick() {
@@ -320,7 +419,7 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
       else if (deleting && cIndex === 0) { deleting = false; tIndex = (tIndex + 1) % texts.length; speed = 500; }
       setTimeout(tick, speed);
     }
-    setTimeout(tick, 1200);
+    setTimeout(tick, 400);
   }
 
   /* =========================================
@@ -509,42 +608,372 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
   }
 
   /* =========================================
-     Contact Form
+     Interactive Contact Message Delivery (Stage 3)
+     Full Claude v2 Truck Delivery Animation & Production Backend
      ========================================= */
   function initContactForm() {
     const form = document.getElementById('contact-form');
-    if (!form) return;
+    const stage = document.getElementById('delivery-stage');
+    if (!form || !stage) return;
 
-    form.addEventListener('submit', async e => {
+    // Enforce initial visibility: Contact form MUST be visible; delivery stage MUST be hidden
+    form.style.display = 'flex';
+    form.classList.remove('is-hidden');
+    form.style.opacity = '1';
+    form.style.visibility = 'visible';
+
+    stage.style.display = 'none';
+    stage.classList.remove('is-active');
+    stage.setAttribute('aria-hidden', 'true');
+
+    const capsule = document.getElementById('td-capsule');
+    const scene = document.getElementById('td-scene');
+    const status = document.getElementById('td-status');
+    const ok = document.getElementById('td-ok');
+    const bad = document.getElementById('td-bad');
+    const truck = document.getElementById('td-truck');
+    const tbody = document.getElementById('td-tbody');
+    const house = document.getElementById('td-house');
+    const pin = document.getElementById('td-pin');
+    const courier = document.getElementById('td-courier');
+    const cParcel = document.getElementById('td-parcel');
+    const doorPanel = document.getElementById('td-door-panel');
+    const bubble = document.getElementById('td-bubble');
+    const fx = document.getElementById('td-fx');
+    const stars = document.getElementById('td-stars');
+    const receipt = document.getElementById('td-receipt');
+    const errmsg = document.getElementById('td-errmsg');
+    const btnAgain = document.getElementById('td-again');
+    const btnRetry = document.getElementById('td-retry');
+    const btnEdit = document.getElementById('td-edit');
+
+    const NS = 'http://www.w3.org/2000/svg';
+    const TX0 = 70, TX1 = 280;
+    const wait = ms => new Promise(r => setTimeout(r, ms));
+    const run = (el, kf, opt) => el.animate(kf, { fill: 'forwards', ...opt }).finished;
+    const cpos = x => `translate(${x}px,196px)`;
+
+    let payload = null;
+    let busy = false;
+    let driveAnimId = null;
+
+    /* ---------- Scenery (Procedural) ---------- */
+    let seed = 7;
+    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+    if (stars) {
+      let st = '';
+      for (let i = 0; i < 46; i++) {
+        st += `<circle class="star" cx="${(rnd() * 640).toFixed(0)}" cy="${(rnd() * 110).toFixed(0)}" r="${(rnd() * 1.1 + 0.3).toFixed(1)}" opacity="${(rnd() * 0.6 + 0.3).toFixed(2)}"/>`;
+      }
+      stars.innerHTML = st;
+    }
+
+    const twice = s => `<g>${s}</g><g transform="translate(640 0)">${s}</g>`;
+    let hills = 'M0 150';
+    for (let x = 0; x <= 640; x += 16) {
+      hills += ` L${x} ${(108 + 16 * Math.sin(x / 640 * Math.PI * 4) + 9 * Math.sin(x / 640 * Math.PI * 8)).toFixed(1)}`;
+    }
+    hills += ' L640 150Z';
+
+    let city = '';
+    for (let i = 0; i < 16; i++) {
+      const h = 32 + Math.floor(rnd() * 62), x = i * 40;
+      city += `<rect x="${x}" y="${150 - h}" width="38" height="${h}" fill="#0d1428"/>`;
+      for (let wy = 150 - h + 6; wy < 144; wy += 9) {
+        for (let wx = 5; wx < 34; wx += 11) {
+          if (rnd() > 0.62) city += `<rect x="${x + wx}" y="${wy}" width="4" height="5" fill="#fcd34d" opacity="${(rnd() * 0.4 + 0.35).toFixed(2)}"/>`;
+        }
+      }
+    }
+
+    let trees = '';
+    for (let k = 0; k < 10; k++) {
+      const x = k * 64 + 22, h = 36 + (k % 3) * 9;
+      trees += `<rect x="${x - 1.5}" y="164" width="3" height="8" fill="#05080f"/><path d="M${x - 12} 166L${x} ${170 - h}L${x + 12} 166Z" fill="#071a18"/><path d="M${x - 9} 150L${x} ${158 - h + 8}L${x + 9} 150Z" fill="#082220"/>`;
+    }
+
+    let ground = '';
+    for (const x of [120, 440]) {
+      ground += `<rect x="${x - 1.5}" y="96" width="3" height="76" fill="#1f2937"/><path d="M${x} 98Q${x} 88 ${x + 14} 88" stroke="#1f2937" stroke-width="3" fill="none"/><rect x="${x + 8}" y="87" width="16" height="5" rx="2" fill="#fde68a"/><polygon points="${x + 12},92 ${x - 18},174 ${x + 50},174" fill="url(#td-lampg)"/><ellipse cx="${x + 16}" cy="176" rx="40" ry="4" fill="#fbbf24" opacity=".14"/>`;
+    }
+    for (let k = 0; k < 10; k++) {
+      ground += `<rect x="${k * 64 + 10}" y="212" width="36" height="3" rx="1" fill="#cbd5e1" opacity=".6"/>`;
+    }
+
+    const layerDefs = [
+      ['td-far', `<path d="${hills}" fill="#0a1124"/>`, 90000],
+      ['td-city', city, 26000],
+      ['td-trees', trees, 5200],
+      ['td-ground', ground, 2400]
+    ];
+
+    const layers = layerDefs.map(([id, svg, dur]) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      el.innerHTML = twice(svg);
+      const a = el.animate(
+        [{ transform: 'translateX(0)' }, { transform: 'translateX(-640px)' }],
+        { duration: dur, iterations: Infinity }
+      );
+      a.pause();
+      return a;
+    }).filter(Boolean);
+
+    const wheels = scene ? [...scene.querySelectorAll('.wheel')].map(w => {
+      const a = w.animate(
+        [{ transform: 'rotate(0)' }, { transform: 'rotate(360deg)' }],
+        { duration: 360, iterations: Infinity }
+      );
+      a.pause();
+      return a;
+    }) : [];
+
+    /* ---------- Helpers ---------- */
+    function walk(x0, x1, d) {
+      if (!courier) return Promise.resolve();
+      courier.classList.add('walking');
+      return run(courier, [{ transform: cpos(x0) }, { transform: cpos(x1) }], { duration: d, easing: 'linear' })
+        .then(() => courier.classList.remove('walking'));
+    }
+
+    function sparkle(cx, cy) {
+      if (!fx) return;
+      for (let i = 0; i < 14; i++) {
+        const c = document.createElementNS(NS, 'circle');
+        c.setAttribute('cx', cx);
+        c.setAttribute('cy', cy);
+        c.setAttribute('r', 2);
+        c.setAttribute('fill', ['#fcd34d', '#34d399', '#7dd3fc', '#fff'][i % 4]);
+        fx.appendChild(c);
+        const a = (i / 14) * Math.PI * 2, d = 26 + Math.random() * 30;
+        c.animate(
+          [{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${Math.cos(a) * d}px,${Math.sin(a) * d - 12}px) scale(.2)`, opacity: 0 }],
+          { duration: 900, easing: 'ease-out' }
+        ).finished.then(() => c.remove());
+      }
+    }
+
+    function update(p, s, t, now) {
+      if (truck) truck.style.transform = `translateX(${TX0 + (TX1 - TX0) * p}px)`;
+      if (house) house.style.transform = `translateX(${380 * (1 - p)}px)`;
+      if (pin) pin.style.transform = `translateX(${-300 * p}px)`;
+      const r = Math.max(s, 0.0001);
+      layers.forEach(a => { if (a) a.playbackRate = r; });
+      wheels.forEach(a => { if (a) a.playbackRate = r; });
+      const squat = t < 0.22 ? -1.3 * Math.sin(Math.PI * t / 0.22) : 0;
+      const dive = t > 0.7 ? 2.2 * Math.sin(Math.PI * Math.min((t - 0.7) / 0.3, 1)) : 0;
+      if (tbody) tbody.style.transform = `translateY(${(Math.sin(now / 58) * 0.7 + Math.sin(now / 23) * 0.25) * s}px) rotate(${squat + dive}deg)`;
+      if (scene) scene.classList.toggle('braking', t > 0.68 && t < 1);
+    }
+
+    function drive(D) {
+      return new Promise(res => {
+        const sm = x => x * x * (3 - 2 * x);
+        const sp = t => (t < 0.22 ? sm(t / 0.22) : t > 0.72 ? sm((1 - t) / 0.28) : 1);
+        const TOT = 0.75 * D;
+        const t0 = performance.now();
+        let last = t0, pos = 0;
+        layers.forEach(a => a && a.play());
+        wheels.forEach(a => a && a.play());
+        (function f(now) {
+          const dt = now - last;
+          last = now;
+          const t = Math.min((now - t0) / D, 1);
+          pos += sp(t) * dt;
+          update(Math.min(pos / TOT, 1), sp(t), t, now);
+          if (t < 1) {
+            driveAnimId = requestAnimationFrame(f);
+          } else {
+            driveAnimId = null;
+            update(1, 0, 1, now);
+            layers.forEach(a => a && a.pause());
+            wheels.forEach(a => a && a.pause());
+            res();
+          }
+        })(t0);
+      });
+    }
+
+    function reset() {
+      if (driveAnimId) {
+        cancelAnimationFrame(driveAnimId);
+        driveAnimId = null;
+      }
+      if (scene) scene.classList.remove('driving', 'received', 'lights', 'braking', 'dooropen', 'hazard-on');
+      [truck, courier, cParcel, doorPanel, bubble, house, pin, tbody].forEach(e => {
+        if (e) e.getAnimations().forEach(a => a.cancel());
+      });
+      layers.forEach(a => { if (a) { a.pause(); a.currentTime = 0; a.playbackRate = 1; } });
+      wheels.forEach(a => { if (a) { a.pause(); a.currentTime = 0; } });
+      if (truck) truck.style.transform = `translateX(${TX0}px)`;
+      if (house) house.style.transform = 'translateX(380px)';
+      if (pin) pin.style.transform = 'translateX(0)';
+      if (tbody) tbody.style.transform = '';
+      if (courier) {
+        courier.style.transform = cpos(24);
+        courier.style.opacity = '1';
+        courier.classList.remove('walking');
+      }
+      if (cParcel) {
+        cParcel.style.transform = '';
+        cParcel.style.opacity = '1';
+      }
+      if (doorPanel) {
+        doorPanel.style.transform = '';
+      }
+      if (bubble) bubble.style.opacity = '0';
+      if (fx) fx.innerHTML = '';
+      if (ok) ok.classList.remove('show');
+      if (bad) bad.classList.remove('show');
+      if (capsule) capsule.style.display = 'block';
+    }
+
+    async function deliver(p) {
+      if (busy) return;
+      busy = true;
+      payload = p;
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      form.style.display = 'none';
+      form.classList.add('is-hidden');
+      stage.style.display = 'flex';
+      stage.classList.add('is-active');
+      stage.setAttribute('aria-hidden', 'false');
+      reset();
+
+      if (status) status.textContent = 'COURIER PICKING UP YOUR MESSAGE...';
+
+      // Send to real backend API in parallel
+      const sending = postApiJson('/contact', p)
+        .then(({ res, data }) => {
+          if (res.ok && data.success) {
+            return { ok: true, data };
+          }
+          return { ok: false, error: new Error(data.message || 'Dispatch failed on the mail server.') };
+        })
+        .catch(err => ({ ok: false, error: err }));
+
+      if (prefersReducedMotion) {
+        const r = await sending;
+        finish(r);
+        return;
+      }
+
+      await wait(300);
+      await walk(24, 146, 1000); // courier -> side door
+
+      if (status) status.textContent = 'LOADING PARCEL...';
+      if (doorPanel) await run(doorPanel, [{ transform: 'translateY(0)' }, { transform: 'translateY(-66px)' }], { duration: 480, easing: 'ease-in-out' });
+      if (cParcel) await run(cParcel, [{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: 'translate(16px,-66px) scale(.55)', opacity: 1, offset: 0.85 }, { transform: 'translate(18px,-70px) scale(.5)', opacity: 0 }], { duration: 560, easing: 'ease-in' });
+      if (doorPanel) await run(doorPanel, [{ transform: 'translateY(-66px)' }, { transform: 'translateY(0)' }], { duration: 420, easing: 'ease-in-out' });
+
+      await walk(146, 226, 600); // courier -> cab
+      if (courier) await run(courier, [{ opacity: 1 }, { opacity: 0 }], { duration: 200 });
+
+      if (status) status.textContent = 'ENGINE STARTING...';
+      if (scene) scene.classList.add('lights');
+      await wait(700);
+
+      if (status) status.textContent = 'IN TRANSIT • DELIVERING MESSAGE';
+      if (scene) scene.classList.add('driving');
+      await drive(4200);
+      if (scene) scene.classList.remove('driving', 'braking');
+
+      if (status) status.textContent = 'ARRIVED • CONFIRMING DELIVERY...';
+      const r = await sending;
+
+      if (!r.ok) {
+        if (scene) scene.classList.add('hazard-on');
+        if (status) status.textContent = 'DELIVERY INTERRUPTED';
+        await wait(1300);
+        finish(r);
+        return;
+      }
+
+      // Courier steps out at destination
+      const cx0 = TX1 + 150;
+      if (cParcel) cParcel.getAnimations().forEach(a => a.cancel());
+      if (courier) {
+        courier.style.transform = cpos(cx0);
+        await run(courier, [{ opacity: 0 }, { opacity: 1 }], { duration: 250 });
+      }
+
+      if (status) status.textContent = 'HANDING OVER TO INBOX...';
+      await walk(cx0, 552, 900);
+
+      if (scene) scene.classList.add('dooropen');
+      await wait(350);
+
+      if (cParcel) await run(cParcel, [{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: 'translate(30px,-16px) scale(.5)', opacity: 0 }], { duration: 520, easing: 'ease-in' });
+      if (courier) run(courier, [{ opacity: 1 }, { opacity: 0 }], { duration: 500, delay: 200 });
+
+      if (scene) scene.classList.add('received');
+      sparkle(585, 140);
+
+      if (bubble) run(bubble, [{ opacity: 0, transform: 'scale(.3)' }, { opacity: 1, transform: 'scale(1.12)', offset: 0.6 }, { opacity: 1, transform: 'scale(1)' }], { duration: 520, easing: 'ease-out' });
+
+      if (status) status.textContent = 'MESSAGE RECEIVED ✓';
+      await wait(1500);
+      finish(r);
+    }
+
+    function finish(r) {
+      if (scene) scene.classList.remove('driving');
+      if (capsule) capsule.style.display = 'none';
+      if (r.ok) {
+        const refId = 'AA-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if (receipt) receipt.textContent = `Delivery Ref: #${refId} • Received at ${timeStr}`;
+        if (ok) ok.classList.add('show');
+        showToast('✅ Message delivered successfully!', 3500);
+      } else {
+        if (errmsg) errmsg.textContent = (r.error && r.error.message) || 'Truck was unable to reach the mail server. Your message is safe — please retry or edit.';
+        if (bad) bad.classList.add('show');
+        showToast('⚠️ Dispatch failed. Please retry or edit.', 3500);
+      }
+      busy = false;
+    }
+
+    function backToForm(clear) {
+      reset();
+      stage.classList.remove('is-active');
+      stage.style.display = 'none';
+      stage.setAttribute('aria-hidden', 'true');
+      form.style.display = 'flex';
+      form.classList.remove('is-hidden');
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = false;
+      if (clear) form.reset();
+    }
+
+    form.addEventListener('submit', e => {
       e.preventDefault();
+      if (busy) return;
+
       const name = document.getElementById('name')?.value.trim();
       const email = document.getElementById('email')?.value.trim();
       const message = document.getElementById('message')?.value.trim();
-      const btn = form.querySelector('button[type="submit"]');
-      const originalText = btn.querySelector('span')?.textContent || btn.textContent;
+      const inquiryType = document.getElementById('project-type')?.value || 'General Inquiry';
 
-      if (!name || !email || !message) { showToast('⚠️ Please fill all fields!', 2200); return; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('⚠️ Enter a valid email!', 2200); return; }
-
-      try {
-        btn.disabled = true;
-        if (btn.querySelector('span')) btn.querySelector('span').textContent = 'Sending... (may take up to 60s)';
-        else btn.textContent = 'Sending... (may take up to 60s)';
-
-        const { res, data } = await postApiJson('/contact', { name, email, message });
-        if (res.ok && data.success) {
-          showToast('✅ Message sent successfully!', 2500);
-          form.reset();
-        } else {
-          showToast('❌ Failed: ' + (data.message || 'Unknown error'), 2500);
-        }
-      } catch {
-        showToast('⚠️ Server error. Try again later.', 2500);
-      } finally {
-        btn.disabled = false;
-        if (btn.querySelector('span')) btn.querySelector('span').textContent = originalText;
-        else btn.textContent = originalText;
+      if (!name || !email || !message) {
+        showToast('⚠️ Please fill in all required fields!', 2400);
+        return;
       }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showToast('⚠️ Please enter a valid email address!', 2400);
+        return;
+      }
+
+      deliver({ name, email, message, inquiryType });
+    });
+
+    if (btnAgain) btnAgain.addEventListener('click', () => backToForm(true));
+    if (btnEdit) btnEdit.addEventListener('click', () => backToForm(false));
+    if (btnRetry) btnRetry.addEventListener('click', () => {
+      if (payload && !busy) deliver(payload);
     });
   }
 
@@ -682,48 +1111,16 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
       ease: 'sine.inOut', stagger: 0.3
     });
 
-    // Cinematic hero entrance
-    const heroTl = gsap.timeline({ delay: 0.65 });
-    heroTl
-      .fromTo('.navbar', { y: -28, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65, ease: 'power3.out' })
-      .fromTo('.hero-badge', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65, ease: 'power3.out' }, '-=0.2')
-      .fromTo('.hero-title-line', { y: 60, opacity: 0, filter: 'blur(10px)' }, {
-        y: 0,
-        opacity: 1,
-        filter: 'blur(0px)',
-        duration: 0.95,
-        ease: 'power4.out',
-        stagger: 0.12
-      }, '-=0.18')
-      .fromTo('.hero-subtitle, .hero-description', { y: 28, opacity: 0 }, {
-        y: 0,
-        opacity: 1,
-        duration: 0.72,
-        ease: 'power3.out',
-        stagger: 0.08
-      }, '-=0.45')
-      .fromTo('.hero-buttons .btn, .hero-stats .stat-item, .hero-stats .stat-divider', { y: 24, opacity: 0 }, {
-        y: 0,
-        opacity: 1,
-        duration: 0.62,
-        ease: 'power3.out',
-        stagger: 0.06
-      }, '-=0.36')
-      .fromTo('.hero-visual-wrapper', { opacity: 0, y: 30, scale: 0.96 }, {
-        opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out'
-      }, '-=0.4')
-      .fromTo('.hero-float-element', { opacity: 0, y: 15 }, {
-        opacity: 1, y: 0, duration: 0.6, ease: 'back.out(1.5)', stagger: 0.1
-      }, '-=0.3');
+    // Safety fallback: Ensure hero visual is visible if animation is interrupted
+    setTimeout(() => {
+      const visual = document.querySelector('.hero-visual-wrapper');
+      if (visual && parseFloat(getComputedStyle(visual).opacity) < 0.2) {
+        visual.style.opacity = '1';
+        visual.style.transform = 'none';
+      }
+    }, 12000);
 
-    if (!prefersReducedMotion) {
-      gsap.to('.hero-visual-wrapper', { y: -10, rotation: 0.5, duration: 4.5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-      gsap.to('.float-1', { y: -8, duration: 3, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.2 });
-      gsap.to('.float-2', { y: -5, duration: 3.5, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.5 });
-      gsap.to('.float-3', { y: -10, duration: 4, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.1 });
-      gsap.to('.float-4', { y: -6, duration: 3.2, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 0.3 });
-    }
-
+    // Services section entrance
     ScrollTrigger.create({
       trigger: '#services',
       start: 'top 75%',
@@ -736,6 +1133,7 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
       }
     });
 
+    // Process section line-fill & step reveals
     ScrollTrigger.create({
       trigger: '#process',
       start: 'top 70%',
@@ -750,6 +1148,82 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
             0.2
           );
       }
+    });
+
+    // Selected Projects entrance choreography
+    gsap.utils.toArray('.project-card').forEach((card, idx) => {
+      gsap.fromTo(card,
+        { opacity: 0, y: 36, scale: 0.98 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.7,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+    });
+
+    // FAQ section entrance
+    gsap.utils.toArray('.faq-item').forEach((item, idx) => {
+      gsap.fromTo(item,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.48,
+          delay: idx * 0.08,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '#faq',
+            start: 'top 82%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+    });
+
+    // Education cards & Certifications reveal
+    gsap.utils.toArray('.edu-card, .cert-item').forEach((el, idx) => {
+      gsap.fromTo(el,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.55,
+          delay: (idx % 2) * 0.08,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+    });
+
+    // Contact items reveal
+    gsap.utils.toArray('.contact-item').forEach((item, idx) => {
+      gsap.fromTo(item,
+        { opacity: 0, x: -20 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          delay: idx * 0.1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: '.contact-info',
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
     });
 
     // Soft parallax layers
@@ -775,20 +1249,175 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
       }
     });
 
-    // Skill chip stagger inside each category
-    gsap.utils.toArray('.skill-category').forEach(card => {
-      gsap.fromTo(card.querySelectorAll('.skill-chip'),
-        { opacity: 0, y: 16, scale: 0.92 },
+    // Skills section cards & chips entrance
+    gsap.utils.toArray('.skill-category').forEach((card, idx) => {
+      gsap.fromTo(card,
+        { opacity: 0, y: 32, scale: 0.98 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 0.46,
-          ease: 'back.out(1.7)',
-          stagger: 0.055,
-          scrollTrigger: { trigger: card, start: 'top 82%', toggleActions: 'play none none none' }
+          duration: 0.65,
+          delay: idx * 0.1,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: '#skills', start: 'top 85%', toggleActions: 'play none none none' }
         }
       );
+
+      gsap.fromTo(card.querySelectorAll('.skill-chip'),
+        { opacity: 0, y: 14, scale: 0.9 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.45,
+          ease: 'back.out(1.5)',
+          stagger: 0.05,
+          delay: 0.18 + idx * 0.08,
+          scrollTrigger: { trigger: '#skills', start: 'top 85%', toggleActions: 'play none none none' }
+        }
+      );
+    });
+
+    // Contact form entrance
+    const contactFormEl = document.getElementById('contact-form');
+    if (contactFormEl) {
+      gsap.fromTo(contactFormEl,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: '#contact', start: 'top 85%', toggleActions: 'play none none none' }
+        }
+      );
+    }
+
+    // Safety fallback: Ensure critical interaction containers are never stuck at opacity: 0
+    setTimeout(() => {
+      document.querySelectorAll('.skill-category, .skill-chip, .contact-form, .project-card, .service-card, .edu-card, .faq-item').forEach(el => {
+        if (el && parseFloat(getComputedStyle(el).opacity) < 0.2) {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        }
+      });
+    }, 2500);
+  }
+
+  /* =========================================
+     Hero Entrance Choreography
+     ========================================= */
+  let heroEntrancePlayed = false;
+
+  function primeHeroElements() {
+    if (typeof gsap === 'undefined' || prefersReducedMotion) return;
+    gsap.set('.navbar', { opacity: 0, y: -28 });
+    gsap.set('.hero-badge', { opacity: 0, y: 18 });
+    gsap.set('.hero-title-line', { opacity: 0, y: 60, filter: 'blur(10px)' });
+    gsap.set('.hero-subtitle, .hero-description', { opacity: 0, y: 28 });
+    gsap.set('.hero-buttons .btn, .hero-stats .stat-item, .hero-stats .stat-divider', { opacity: 0, y: 24 });
+    gsap.set('.hero-visual-wrapper', { opacity: 0, y: 32, scale: 0.96 });
+    gsap.set('.monolith-code-pane, .monolith-viewport-card', { opacity: 0, y: 16 });
+  }
+
+  function playHeroEntrance() {
+    if (heroEntrancePlayed) return;
+    heroEntrancePlayed = true;
+
+    // Start typewriter effect in perfect sync with hero entrance
+    initHeroTyped();
+
+    if (typeof gsap === 'undefined' || prefersReducedMotion) {
+      const heroEls = document.querySelectorAll(
+        '.navbar, .hero-badge, .hero-visual-wrapper, .hero-title-line, .hero-subtitle, .hero-description, .hero-buttons .btn, .hero-stats .stat-item, .hero-stats .stat-divider, .monolith-code-pane, .monolith-viewport-card'
+      );
+      heroEls.forEach(el => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+        el.style.filter = 'none';
+      });
+      return;
+    }
+
+    const heroTl = gsap.timeline();
+    heroTl
+      .to('.navbar', { y: 0, opacity: 1, duration: 0.65, ease: 'power3.out' })
+      .to('.hero-badge', { y: 0, opacity: 1, duration: 0.65, ease: 'power3.out' }, '-=0.2')
+      .to('.hero-title-line', {
+        y: 0,
+        opacity: 1,
+        filter: 'blur(0px)',
+        duration: 0.95,
+        ease: 'power4.out',
+        stagger: 0.12
+      }, '-=0.18')
+      .to('.hero-subtitle, .hero-description', {
+        y: 0,
+        opacity: 1,
+        duration: 0.72,
+        ease: 'power3.out',
+        stagger: 0.08
+      }, '-=0.45')
+      .to('.hero-buttons .btn, .hero-stats .stat-item, .hero-stats .stat-divider', {
+        y: 0,
+        opacity: 1,
+        duration: 0.62,
+        ease: 'power3.out',
+        stagger: 0.06
+      }, '-=0.36')
+      .to('.hero-visual-wrapper', {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.85,
+        ease: 'power3.out'
+      }, '-=0.4')
+      .to('.monolith-code-pane, .monolith-viewport-card', {
+        opacity: 1,
+        y: 0,
+        duration: 0.65,
+        ease: 'power3.out',
+        stagger: 0.14
+      }, '-=0.35');
+
+    if (!prefersReducedMotion) {
+      gsap.to('.dev-monolith', { y: -6, duration: 4.5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+    }
+  }
+
+  /* =========================================
+     Interactive FAQ Accordion
+     ========================================= */
+  function initFaqAccordion() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    if (!faqItems.length) return;
+
+    faqItems.forEach(item => {
+      const questionBtn = item.querySelector('.faq-question');
+      if (!questionBtn) return;
+
+      questionBtn.addEventListener('click', () => {
+        const isOpen = item.classList.contains('active');
+
+        // Close other accordion items for clean focus
+        faqItems.forEach(other => {
+          if (other !== item && other.classList.contains('active')) {
+            other.classList.remove('active');
+            const otherBtn = other.querySelector('.faq-question');
+            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+          }
+        });
+
+        // Toggle current item
+        if (isOpen) {
+          item.classList.remove('active');
+          questionBtn.setAttribute('aria-expanded', 'false');
+        } else {
+          item.classList.add('active');
+          questionBtn.setAttribute('aria-expanded', 'true');
+        }
+      });
     });
   }
 
@@ -796,7 +1425,6 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
      DOMContentLoaded — Wire Everything
      ========================================= */
   document.addEventListener('DOMContentLoaded', () => {
-    initPreloader();
     initScrollProgress();
     ensureMobileNavVisible();
     window.addEventListener('resize', ensureMobileNavVisible);
@@ -820,9 +1448,9 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
     initSmoothScroll();
     initHeroCanvas();
     initHeroPointerGlow();
-    initHeroTyped();
     initEducationAnimation();
     initCopyEmail();
+    initFaqAccordion();
     initContactForm();
 
     // VanillaTilt, Motion, GSAP
@@ -831,6 +1459,14 @@ import { animate, scroll, inView, stagger } from "https://cdn.jsdelivr.net/npm/m
       if (typeof initPremiumInteractions === 'function') initPremiumInteractions();
       initMotionAnimations();
       initGSAP();
+
+      // Prime Hero elements to their hidden entrance state while welcome overlay covers page
+      primeHeroElements();
+
+      // Trigger Welcome Intro, seamlessly transitioning into Hero entrance exactly once
+      initWelcomeIntro(() => {
+        playHeroEntrance();
+      });
     });
   });
 
