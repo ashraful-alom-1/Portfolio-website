@@ -909,11 +909,12 @@ section,
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 32px;
 }
 
 .project-card {
+  grid-column: span 2;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--r-xl);
@@ -935,7 +936,7 @@ section,
 }
 
 .project-card-featured {
-  grid-column: span 2;
+  grid-column: span 3;
   border-color: rgba(232, 255, 71, 0.32);
   background:
     linear-gradient(135deg, rgba(232, 255, 71, 0.075), transparent 34%),
@@ -1798,6 +1799,10 @@ section,
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .project-card {
+    grid-column: span 1;
+  }
+
   .project-card-featured {
     grid-column: span 2;
   }
@@ -1891,6 +1896,7 @@ section,
     grid-template-columns: 1fr;
   }
 
+  .project-card,
   .project-card-featured {
     grid-column: span 1;
   }
